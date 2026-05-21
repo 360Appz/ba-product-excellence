@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BA/PO Communication Playbook — 20 sections, word for word">
+  <title>BA/PO Communication Playbook · BA/PO Excellence</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div class="page-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="particles"></div>
+  <div id="resultFlash" class="result-flash"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">BA/PO ⚡ EXCELLENCE</a>
+    <div class="navbar-nav">
+      <a href="index.html"      class="nav-link">Home</a>
+      <a href="playbook.html"   class="nav-link">Playbook</a>
+      <a href="excellence.html" class="nav-link">Excellence</a>
+      <a href="quiz.html"       class="nav-link">Quiz</a>
+      <a href="daily.html"      class="nav-link">Daily Hub</a>
+    </div>
+    <div class="navbar-actions">
+      <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
+      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="page-content">
+    <!-- Page Header -->
+    <header class="page-header">
+      <div class="page-eyebrow">
+        <a href="index.html" class="back-link">← Back</a>
+        <span>·</span>
+        <span>BA/PO Communication Playbook</span>
+      </div>
+      <h1 class="page-h1">
+        Communication <span class="accent">Playbook</span>
+      </h1>
+      <p class="page-subtitle">
+        The complete neutral, comprehensive playbook for corporate, startup, enterprise, agile, waterfall, hybrid, remote, and government environments. Word for word.
+      </p>
+    </header>
+
+    <!-- Intro Banner -->
+    <div class="intro-banner" id="introBanner"></div>
+
+    <!-- Carousel Section -->
+    <section class="carousel-section" aria-label="Playbook carousel">
+      <div class="carousel-header">
+        <h2 class="carousel-title">📖 Sections</h2>
+        <span class="carousel-counter" id="carouselCounter" aria-live="polite">01 / 20</span>
+      </div>
+
+      <div class="carousel-track-wrapper" id="carouselWrapper" role="region" aria-label="Section content">
+        <!-- Card rendered by JS -->
+      </div>
+
+      <nav class="carousel-nav" aria-label="Carousel navigation">
+        <button id="prevBtn" class="nav-arrow" aria-label="Previous section" disabled>←</button>
+        <span class="nav-progress" id="navProgress" aria-live="polite">1 of 20</span>
+        <button id="nextBtn" class="nav-arrow" aria-label="Next section">→</button>
+      </nav>
+
+      <p class="keyboard-hint">
+        Use <kbd class="kbd">←</kbd> <kbd class="kbd">→</kbd> arrow keys to navigate · Swipe on mobile
+      </p>
+    </section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initApp();
+
+      // Populate intro banner
+      const banner = document.getElementById('introBanner');
+      if (banner && window.BAData) {
+        banner.innerHTML = `<strong>The core thesis:</strong> ${BAData.COMMS_INTRO.replace(/\n/g,'<br>')}`;
+      }
+
+      // Build carousel with shuffled (hourly) sections
+      const sections = window.Engine
+        ? Engine.getHourlyCardOrder(BAData.COMMS_SECTIONS)
+        : BAData.COMMS_SECTIONS;
+
+      App.createCarousel(sections, App.renderContentCard);
+
+      // Award XP for visit
+      if (window.Engine) {
+        Engine.addXP(5);
+        App.updateXPBadge();
+      }
+    });
+  </script>
+</body>
+</html>

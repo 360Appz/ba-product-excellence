@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BA/PO Excellence — The ultimate gamified adventure for Business Analysts & Product Owners">
+  <meta name="theme-color" content="#7C3AED">
+  <title>BA/PO Excellence — Enter the Arena</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── INDEX-SPECIFIC STYLES ─────────────────── */
+    .hero-section {
+      min-height: calc(100vh - var(--nav-h));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-2xl) var(--space-xl);
+      position: relative;
+    }
+
+    .hero-badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      justify-content: center;
+      margin-bottom: var(--space-xl);
+      animation: fadeInDown 0.6s var(--ease-spring) both;
+    }
+
+    .hero-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid;
+    }
+    .badge-purple { color: var(--primary); border-color: rgba(124,58,237,0.3); background: rgba(124,58,237,0.08); }
+    .badge-pink   { color: var(--secondary); border-color: rgba(236,72,153,0.3); background: rgba(236,72,153,0.08); }
+    .badge-cyan   { color: var(--cyan); border-color: rgba(6,182,212,0.3); background: rgba(6,182,212,0.08); }
+    .badge-emerald{ color: var(--emerald); border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.08); }
+
+    .hero-title-block {
+      margin-bottom: var(--space-xl);
+      animation: fadeInUp 0.7s var(--ease-spring) 0.1s both;
+    }
+
+    .title-line-1 {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    .title-line-2 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 12vw, 9rem);
+      font-weight: 700;
+      line-height: 0.88;
+      letter-spacing: -0.05em;
+      color: var(--text);
+      position: relative;
+      display: block;
+    }
+
+    .title-line-2 .word-ba {
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      background-size: 200% 200%;
+      animation: gradientShift 3s ease-in-out infinite alternate;
+    }
+
+    .title-line-3 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      -webkit-text-stroke: 2px var(--primary);
+      -webkit-text-fill-color: transparent;
+      opacity: 0.3;
+      display: block;
+      animation: subtleFlicker 4s ease-in-out infinite;
+    }
+
+    @keyframes subtleFlicker {
+      0%, 90%, 100% { opacity: 0.3; }
+      92% { opacity: 0.5; }
+      94% { opacity: 0.3; }
+    }
+
+    .hero-tagline {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-2);
+      max-width: 580px;
+      line-height: 1.7;
+      margin-bottom: var(--space-2xl);
+      animation: fadeInUp 0.7s var(--ease-spring) 0.2s both;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.7s var(--ease-spring) 0.3s both;
+      margin-bottom: var(--space-3xl);
+    }
+
+    /* ── SCROLLING TICKER ──────────────────────────────── */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: var(--space-md) 0;
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      margin-bottom: var(--space-3xl);
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: var(--space-3xl);
+      animation: tickerScroll 30s linear infinite;
+      width: max-content;
+    }
+
+    @keyframes tickerScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .ticker-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* ── STATS BAR ─────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: var(--space-2xl);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-2xl);
+      animation: fadeInUp 0.7s var(--ease-spring) 0.35s both;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1;
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+      display: block;
+      font-family: var(--font-mono);
+    }
+
+    /* ── PORTAL SECTION ────────────────────────────────── */
+    .portals-section {
+      padding: 0 var(--space-xl) var(--space-4xl);
+    }
+
+    .portals-section-label {
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      padding: var(--space-2xl);
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="page-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="particles"></div>
+  <div id="resultFlash" class="result-flash"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <span class="navbar-logo">BA/PO ⚡ EXCELLENCE</span>
+    <div class="navbar-nav">
+      <a href="index.html"     class="nav-link">Home</a>
+      <a href="playbook.html"  class="nav-link">Playbook</a>
+      <a href="excellence.html" class="nav-link">Excellence</a>
+      <a href="quiz.html"      class="nav-link">Quiz</a>
+      <a href="daily.html"     class="nav-link">Daily Hub</a>
+    </div>
+    <div class="navbar-actions">
+      <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
+      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="page-content">
+    <!-- HERO -->
+    <section class="hero-section">
+      <div class="hero-badge-group">
+        <span class="hero-badge badge-purple">20 Comm Strategies</span>
+        <span class="hero-badge badge-cyan">12 Excellence Modules</span>
+        <span class="hero-badge badge-pink">30 Quiz Questions</span>
+        <span class="hero-badge badge-emerald">Daily Q & Quote</span>
+      </div>
+
+      <div class="hero-title-block">
+        <span class="title-line-1">The Ultimate Arena for</span>
+        <span class="title-line-2"><span class="word-ba">BA/PO</span></span>
+        <span class="title-line-3">EXCELLENCE</span>
+      </div>
+
+      <p class="hero-tagline">
+        A translator. A sense-maker. A decision-framer. A value-protector.
+        Master the complete BA/PO communication playbook through interactive adventure.
+      </p>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-num" style="background:var(--grad-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">20</span>
+          <span class="stat-label">Comm Sections</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#06B6D4,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">12</span>
+          <span class="stat-label">Excellence Parts</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">30</span>
+          <span class="stat-label">Quiz Questions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">25</span>
+          <span class="stat-label">Quotes</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#EC4899,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">15</span>
+          <span class="stat-label">QoTD Cards</span>
+        </div>
+      </div>
+
+      <div class="hero-cta-group">
+        <a href="playbook.html" class="btn btn-primary btn-lg">📖 Explore Playbook</a>
+        <a href="quiz.html"     class="btn btn-outline btn-lg">🎯 Take the Quiz</a>
+        <a href="daily.html"    class="btn btn-ghost btn-lg">📅 Daily Hub</a>
+      </div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker-track" id="tickerTrack">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- PORTALS -->
+    <section class="portals-section">
+      <p class="portals-section-label">⚡ Choose your adventure ⚡</p>
+      <div class="portals-grid">
+        <a href="playbook.html" class="portal-card portal-playbook" aria-label="BA/PO Communication Playbook">
+          <span class="portal-icon">📖</span>
+          <span class="portal-tag">PLAYBOOK</span>
+          <h2 class="portal-title">BA/PO Communication Playbook</h2>
+          <p class="portal-desc">20 sections covering every communication scenario — from Agile ceremonies to executive updates, stakeholder archetypes to difficult conversation scripts. Word for word.</p>
+          <div class="portal-meta">
+            <span class="portal-count">20 sections · Carousel</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="excellence.html" class="portal-card portal-excellence" aria-label="BA/PO Excellence Guide">
+          <span class="portal-icon">⚡</span>
+          <span class="portal-tag">EXCELLENCE</span>
+          <h2 class="portal-title">BA/PO Excellence Guide</h2>
+          <p class="portal-desc">12 modules covering elite BA/PO standards — requirements gathering, stakeholder management, backlog hygiene, UAT, metrics, and the exemplary mindset.</p>
+          <div class="portal-meta">
+            <span class="portal-count">12 modules · Carousel</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="quiz.html" class="portal-card portal-quiz" aria-label="Rapid Fire Quiz">
+          <span class="portal-icon">🎯</span>
+          <span class="portal-tag">QUIZ ARENA</span>
+          <h2 class="portal-title">Rapid Fire Quiz</h2>
+          <p class="portal-desc">30 questions. 10 seconds each. Test everything from BLUF to RAID logs, stakeholder archetypes to the Communication Ladder. Earn XP. Break your high score.</p>
+          <div class="portal-meta">
+            <span class="portal-count">30 questions · Timed</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="daily.html" class="portal-card portal-daily" aria-label="Daily Hub">
+          <span class="portal-icon">📅</span>
+          <span class="portal-tag">DAILY HUB</span>
+          <h2 class="portal-title">Daily Hub</h2>
+          <p class="portal-desc">Quote of the Day. Question of the Day. Rapid Fire deck. All shuffled daily using a seeded algorithm — fresh insights every morning, consistent through the day.</p>
+          <div class="portal-meta">
+            <span class="portal-count">Daily refresh · Seeded</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="excellence.html#mindset" class="portal-card portal-mission" aria-label="The Exemplary Mindset">
+          <span class="portal-icon">🧠</span>
+          <span class="portal-tag">MINDSET</span>
+          <h2 class="portal-title">The Exemplary BA/PO Mindset</h2>
+          <p class="portal-desc">"You are the voice of the user. The protector of why. The translator. The realist." The complete exemplary mindset, skill progression, and 90-day plan.</p>
+          <div class="portal-meta">
+            <span class="portal-count">Skills · Career path</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <p>BA/PO Excellence · Built for the arena · Powered by structured thinking</p>
+      <p style="margin-top:4px;opacity:0.6">Refreshes hourly · Shuffled daily · Content from BA/PO Communication Playbook & Excellence Guide</p>
+    </footer>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // ── TICKER POPULATION ─────────────────────────
+    function populateTicker() {
+      const items = [
+        'Translator · Sense-maker · Decision-framer · Value-protector',
+        '20 Communication Sections',
+        'BA vs PO: Know the difference',
+        'BLUF: Bottom Line Up Front',
+        'The Communication Ladder: 5 Levels',
+        '15 Stakeholder Archetypes',
+        'RAID: Risk · Assumption · Issue · Dependency',
+        'The Five Levels of Why',
+        '30 Rapid Fire Quiz Questions',
+        'Daily Quote · Daily Question · Daily Streak',
+        '"Agile does not remove the need for clarity"',
+        '"A BA/PO without backbone becomes a note-taker"',
+        '"Plan for 80% of theoretical capacity"',
+      ];
+      const track = document.getElementById('tickerTrack');
+      if (!track) return;
+      // Double for seamless loop
+      const allItems = [...items, ...items];
+      track.innerHTML = allItems.map(item => `
+        <span class="ticker-item">
+          <span class="ticker-dot"></span>
+          ${item}
+        </span>
+      `).join('');
+    }
+
+    // ── INIT ─────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      initApp();
+      initPortalCards();
+      populateTicker();
+
+      // Animate stat numbers
+      document.querySelectorAll('.stat-num').forEach(el => {
+        const target = parseInt(el.textContent);
+        let current = 0;
+        const step = target / 30;
+        const interval = setInterval(() => {
+          current = Math.min(target, current + step);
+          el.textContent = Math.round(current);
+          if (current >= target) clearInterval(interval);
+        }, 40);
+      });
+    });
+  </script>
+</body>
+</html>

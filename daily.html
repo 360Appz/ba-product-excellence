@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BA/PO Excellence Daily Hub — Quote of the Day, Question of the Day, Rapid Fire Deck">
+  <title>Daily Hub · BA/PO Excellence</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── DAILY PAGE EXTRAS ───────────────────── */
+
+    /* Hero Date Bar */
+    .date-bar {
+      text-align: center;
+      padding: var(--space-xl) var(--space-xl) 0;
+    }
+    .date-display {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+    }
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 8px 20px;
+      margin-top: var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--primary);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .date-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* Quote Card (full width, prominent) */
+    .quote-mega-card {
+      grid-column: 1 / -1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-mega-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 3.5vw, 2rem);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+      margin: var(--space-lg) 0 var(--space-xl);
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-open {
+      font-size: clamp(4rem, 10vw, 7rem);
+      line-height: 0.7;
+      color: var(--primary);
+      opacity: 0.12;
+      font-family: Georgia, serif;
+      display: block;
+      margin-bottom: -20px;
+    }
+
+    .quote-source-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .quote-source-text {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--dur-fast);
+    }
+    .share-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Quote navigation (multiple quotes) */
+    .quote-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+    .quote-nav-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all var(--dur-fast);
+    }
+    .quote-nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* Rapid fire preview cards */
+    .rf-preview {
+      grid-column: 1 / -1;
+    }
+
+    .rf-q-carousel-wrap {
+      position: relative;
+      overflow: hidden;
+      margin-top: var(--space-lg);
+    }
+
+    .rf-q-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-md) var(--space-lg);
+      display: none;
+      animation: fadeInUp 0.3s var(--ease-spring) both;
+    }
+    .rf-q-card.active { display: block; }
+
+    .rf-q-text {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: var(--space-sm);
+    }
+    .rf-q-cat {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--secondary);
+    }
+    .rf-q-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-top: var(--space-md);
+    }
+    .rf-mini-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--dur-fast);
+    }
+    .rf-mini-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    /* Tip of the hour card */
+    .tip-card {
+      --card-gradient: linear-gradient(135deg, #10B981, #06B6D4);
+      --card-color: #10B981;
+    }
+    .tip-text {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+
+    /* All quotes section */
+    .all-quotes-section {
+      padding: var(--space-lg) var(--space-xl) var(--space-3xl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .all-quotes-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: var(--space-lg);
+    }
+    .quotes-carousel-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    .quotes-carousel-track {
+      display: flex;
+      transition: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-bg"></div>
+  <div class="orb orb-1" style="background:radial-gradient(circle,rgba(99,102,241,0.25) 0%,transparent 70%)"></div>
+  <div class="orb orb-2" style="background:radial-gradient(circle,rgba(139,92,246,0.2) 0%,transparent 70%)"></div>
+  <div class="particles"></div>
+  <div id="resultFlash" class="result-flash"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">BA/PO ⚡ EXCELLENCE</a>
+    <div class="navbar-nav">
+      <a href="index.html"      class="nav-link">Home</a>
+      <a href="playbook.html"   class="nav-link">Playbook</a>
+      <a href="excellence.html" class="nav-link">Excellence</a>
+      <a href="quiz.html"       class="nav-link">Quiz</a>
+      <a href="daily.html"      class="nav-link">Daily Hub</a>
+    </div>
+    <div class="navbar-actions">
+      <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
+      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="page-content">
+    <header class="page-header">
+      <div class="page-eyebrow">
+        <a href="index.html" class="back-link">← Back</a>
+        <span>·</span>
+        <span>Daily Hub</span>
+      </div>
+      <h1 class="page-h1">
+        Daily <span class="accent" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;background-clip:text;">Hub</span>
+      </h1>
+    </header>
+
+    <!-- Date Bar -->
+    <div class="date-bar">
+      <p class="date-display" id="dateDisplay">Loading date...</p>
+      <div class="date-badge">
+        <span class="date-dot"></span>
+        <span id="dateBadgeText">Refreshes at midnight</span>
+      </div>
+    </div>
+
+    <!-- Daily Grid -->
+    <div class="daily-grid" style="padding-top:var(--space-xl)">
+
+      <!-- QUOTE OF THE DAY -->
+      <div class="daily-card quote-mega-card" id="quoteCard">
+        <div class="daily-card-eyebrow">💬 QUOTE OF THE DAY</div>
+        <span class="quote-open">"</span>
+        <p class="quote-mega-text" id="quoteText">Loading...</p>
+        <div class="quote-source-row">
+          <span class="quote-source-text" id="quoteSource">— BA/PO Excellence</span>
+          <button class="share-btn" onclick="DailyHub.copyQuote()" title="Copy quote">
+            📋 Copy
+          </button>
+        </div>
+        <div class="quote-nav" aria-label="Browse quotes">
+          <button class="quote-nav-btn" onclick="DailyHub.prevQuote()" aria-label="Previous quote">←</button>
+          <span id="quoteCounter" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)">1 / 25</span>
+          <button class="quote-nav-btn" onclick="DailyHub.nextQuote()" aria-label="Next quote">→</button>
+        </div>
+      </div>
+
+      <!-- QUESTION OF THE DAY -->
+      <div class="daily-card qotd-card" style="--card-gradient:linear-gradient(135deg,#F59E0B,#F43F5E);--card-color:#F59E0B">
+        <div class="daily-card-eyebrow">🎯 QUESTION OF THE DAY</div>
+        <p class="qotd-question" id="qotdQuestion">Loading...</p>
+        <button class="qotd-answer-btn" id="qotdRevealBtn" onclick="DailyHub.revealQotd()">
+          💡 Reveal Answer
+        </button>
+        <div class="qotd-answer" id="qotdAnswer"></div>
+      </div>
+
+      <!-- STREAK -->
+      <div class="daily-card streak-card">
+        <div class="daily-card-eyebrow">🔥 DAILY STREAK</div>
+        <div class="streak-number" id="streakNum">1</div>
+        <div class="streak-label">days in a row</div>
+        <div style="margin-top:var(--space-md);font-size:0.8rem;color:var(--text-muted)" id="streakMsg">Keep it going!</div>
+      </div>
+
+      <!-- COUNTDOWN -->
+      <div class="daily-card countdown-card">
+        <div class="daily-card-eyebrow">⏰ NEXT REFRESH</div>
+        <div class="countdown-display" id="countdown">00:00:00</div>
+        <div class="countdown-label">until tomorrow's content</div>
+        <div style="margin-top:var(--space-md);font-size:0.8rem;color:var(--text-muted)">Quote, question & deck refresh daily at midnight</div>
+      </div>
+
+      <!-- TIP OF THE HOUR -->
+      <div class="daily-card tip-card">
+        <div class="daily-card-eyebrow">💡 TIP OF THE HOUR</div>
+        <p class="tip-text" id="tipText">Loading...</p>
+        <div style="margin-top:var(--space-md);font-family:var(--font-mono);font-size:0.65rem;color:var(--text-muted)" id="tipSource"></div>
+      </div>
+
+      <!-- XP & LEVEL -->
+      <div class="daily-card" style="--card-gradient:linear-gradient(135deg,#7C3AED,#EC4899)">
+        <div class="daily-card-eyebrow" style="color:var(--primary)">⚡ YOUR PROGRESS</div>
+        <div id="levelDisplay" style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:var(--space-sm)">Novice Analyst</div>
+        <div id="xpDisplay" style="font-family:var(--font-mono);font-size:0.9rem;color:var(--text-muted);margin-bottom:var(--space-md)">0 XP total</div>
+        <div style="height:8px;background:var(--border);border-radius:var(--radius-full);overflow:hidden;margin-bottom:var(--space-sm)">
+          <div id="xpBarFill" style="height:100%;background:var(--grad-primary);border-radius:var(--radius-full);width:0%;transition:width 1s var(--ease-spring)"></div>
+        </div>
+        <div style="font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)" id="xpToNext"></div>
+        <a href="quiz.html" class="btn btn-primary btn-sm" style="margin-top:var(--space-lg);display:inline-flex">🎯 Earn More XP</a>
+      </div>
+
+      <!-- RAPID FIRE PREVIEW DECK -->
+      <div class="daily-card rf-preview" style="--card-gradient:linear-gradient(135deg,#EC4899,#F43F5E)">
+        <div class="daily-card-eyebrow" style="color:var(--secondary)">⚡ TODAY'S RAPID FIRE DECK</div>
+        <div class="rf-deck-title">Quick-Fire Questions</div>
+        <div class="rf-deck-sub">Today's shuffled deck — 30 questions, seeded daily. Tap to preview.</div>
+        <div class="rf-q-carousel-wrap">
+          <div id="rfPreviewCards"></div>
+        </div>
+        <div class="rf-q-nav" id="rfQNav"></div>
+        <a href="quiz.html" class="btn btn-primary btn-sm" style="margin-top:var(--space-lg);background:var(--grad-fire);display:inline-flex">
+          🚀 Start Rapid Fire Quiz
+        </a>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+  const DailyHub = (() => {
+    let quotes = [];
+    let qCurrent = 0;
+    let rfQuestions = [];
+    let rfPCurrent = 0;
+
+    // ── QUOTE NAVIGATION ─────────────────────────
+    function initQuotes() {
+      quotes = window.BAData ? window.Engine
+        ? Engine.seededShuffle(BAData.QUOTES, Engine.getDaySeed())
+        : BAData.QUOTES : [];
+      qCurrent = 0;
+      renderQuote();
+    }
+
+    function renderQuote() {
+      const q = quotes[qCurrent];
+      if (!q) return;
+      const textEl = document.getElementById('quoteText');
+      const srcEl  = document.getElementById('quoteSource');
+      const cntEl  = document.getElementById('quoteCounter');
+      if (textEl) { textEl.style.opacity = 0; setTimeout(() => { textEl.textContent = q.text; textEl.style.opacity = 1; textEl.style.transition = 'opacity 0.4s'; }, 100); }
+      if (srcEl)  srcEl.textContent = `— ${q.source}`;
+      if (cntEl)  cntEl.textContent = `${qCurrent + 1} / ${quotes.length}`;
+    }
+
+    function nextQuote() {
+      qCurrent = (qCurrent + 1) % quotes.length;
+      renderQuote();
+      if (window.SoundEngine) SoundEngine.swipe();
+    }
+
+    function prevQuote() {
+      qCurrent = (qCurrent - 1 + quotes.length) % quotes.length;
+      renderQuote();
+      if (window.SoundEngine) SoundEngine.swipe();
+    }
+
+    function copyQuote() {
+      const q = quotes[qCurrent];
+      if (!q) return;
+      const text = `"${q.text}" — ${q.source}`;
+      navigator.clipboard.writeText(text).then(() => {
+        App.showToast('Quote copied! 📋');
+        if (window.SoundEngine) SoundEngine.click();
+      }).catch(() => {
+        App.showToast('Copy not supported');
+      });
+    }
+
+    // ── QUESTION OF THE DAY ──────────────────────
+    function initQotd() {
+      const q = window.Engine ? Engine.getQuestionOfDay() : (window.BAData ? BAData.QOTD_POOL[0] : null);
+      if (!q) return;
+      const qEl = document.getElementById('qotdQuestion');
+      const aEl = document.getElementById('qotdAnswer');
+      if (qEl) qEl.textContent = q.q;
+      if (aEl) aEl.textContent = q.a;
+    }
+
+    function revealQotd() {
+      const aEl = document.getElementById('qotdAnswer');
+      const btn = document.getElementById('qotdRevealBtn');
+      if (aEl) {
+        aEl.classList.add('revealed');
+        if (btn) btn.style.display = 'none';
+        if (window.SoundEngine) SoundEngine.reveal();
+        if (window.Engine) { Engine.addXP(15); App.updateXPBadge(); }
+        App.showToast('+15 XP for reviewing the answer! 🧠');
+      }
+    }
+
+    // ── STREAK & XP ──────────────────────────────
+    function initStreak() {
+      if (!window.Engine) return;
+      const state = Engine.getState();
+      const streakEl = document.getElementById('streakNum');
+      const msgEl    = document.getElementById('streakMsg');
+      if (streakEl) streakEl.textContent = state.streak || 1;
+      const msgs = ['Keep it going!', 'You\'re on fire! 🔥', 'Unstoppable! ⚡', 'Legend! 🏆'];
+      const streak = state.streak || 1;
+      const msg = streak >= 30 ? msgs[3] : streak >= 14 ? msgs[2] : streak >= 7 ? msgs[1] : msgs[0];
+      if (msgEl) msgEl.textContent = msg;
+    }
+
+    function initXP() {
+      if (!window.Engine) return;
+      const state = Engine.getState();
+      const info = Engine.getXPToNextLevel(state.xp);
+      const lvlEl  = document.getElementById('levelDisplay');
+      const xpEl   = document.getElementById('xpDisplay');
+      const barEl  = document.getElementById('xpBarFill');
+      const nextEl = document.getElementById('xpToNext');
+      if (lvlEl) lvlEl.textContent = `Level ${state.level}: ${Engine.getLevelTitle(state.level)}`;
+      if (xpEl)  xpEl.textContent = `${state.xp} XP total · High Score: ${state.quizHighScore}%`;
+      if (nextEl) nextEl.textContent = info.next === Infinity
+        ? 'Maximum level reached! 🏆'
+        : `${info.next - state.xp} XP to next level`;
+      setTimeout(() => { if (barEl) barEl.style.width = info.progress + '%'; }, 300);
+    }
+
+    // ── COUNTDOWN ────────────────────────────────
+    function startCountdown() {
+      function update() {
+        const el = document.getElementById('countdown');
+        if (el) el.textContent = Engine.getCountdownToMidnight();
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    // ── TIP OF THE HOUR ──────────────────────────
+    function initTip() {
+      if (!window.BAData || !window.Engine) return;
+      const allQuotes = BAData.QUOTES;
+      const tip = Engine.seededPick(allQuotes, Engine.getHourSeed() + 42);
+      const tipEl = document.getElementById('tipText');
+      const srcEl = document.getElementById('tipSource');
+      if (tipEl) tipEl.textContent = tip.text;
+      if (srcEl) srcEl.textContent = `Source: ${tip.source} · Refreshes every hour`;
+    }
+
+    // ── RAPID FIRE PREVIEW ───────────────────────
+    function initRFPreview() {
+      if (!window.BAData || !window.Engine) return;
+      rfQuestions = Engine.getDailyRapidFire().slice(0, 5); // preview first 5
+      rfPCurrent = 0;
+      renderRFPreview();
+    }
+
+    function renderRFPreview() {
+      const container = document.getElementById('rfPreviewCards');
+      const nav = document.getElementById('rfQNav');
+      if (!container) return;
+
+      container.innerHTML = rfQuestions.map((q, i) => `
+        <div class="rf-q-card ${i === rfPCurrent ? 'active' : ''}" id="rfPCard${i}">
+          <p class="rf-q-cat">${q.cat}</p>
+          <p class="rf-q-text">${q.q}</p>
+        </div>
+      `).join('');
+
+      if (nav) {
+        nav.innerHTML = `
+          <button class="rf-mini-btn" onclick="DailyHub.prevRF()" ${rfPCurrent === 0 ? 'disabled' : ''}>←</button>
+          <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted)">${rfPCurrent + 1} / ${rfQuestions.length} preview</span>
+          <button class="rf-mini-btn" onclick="DailyHub.nextRF()" ${rfPCurrent === rfQuestions.length - 1 ? 'disabled' : ''}>→</button>
+        `;
+      }
+    }
+
+    function nextRF() {
+      if (rfPCurrent < rfQuestions.length - 1) {
+        rfPCurrent++;
+        document.querySelectorAll('.rf-q-card').forEach((c, i) => c.classList.toggle('active', i === rfPCurrent));
+        renderRFNavOnly();
+        if (window.SoundEngine) SoundEngine.swipe();
+      }
+    }
+
+    function prevRF() {
+      if (rfPCurrent > 0) {
+        rfPCurrent--;
+        document.querySelectorAll('.rf-q-card').forEach((c, i) => c.classList.toggle('active', i === rfPCurrent));
+        renderRFNavOnly();
+        if (window.SoundEngine) SoundEngine.swipe();
+      }
+    }
+
+    function renderRFNavOnly() {
+      const nav = document.getElementById('rfQNav');
+      if (nav) {
+        nav.innerHTML = `
+          <button class="rf-mini-btn" onclick="DailyHub.prevRF()" ${rfPCurrent === 0 ? 'disabled' : ''}>←</button>
+          <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted)">${rfPCurrent + 1} / ${rfQuestions.length} preview</span>
+          <button class="rf-mini-btn" onclick="DailyHub.nextRF()" ${rfPCurrent === rfQuestions.length - 1 ? 'disabled' : ''}>→</button>
+        `;
+      }
+    }
+
+    // ── INIT ALL ─────────────────────────────────
+    function init() {
+      const dateEl = document.getElementById('dateDisplay');
+      const badgeEl = document.getElementById('dateBadgeText');
+      if (dateEl && window.Engine) dateEl.textContent = Engine.formatDate();
+      if (badgeEl && window.Engine) badgeEl.textContent = `Seeded for ${Engine.formatDateShort()} · Refreshes at midnight`;
+
+      initQuotes();
+      initQotd();
+      initStreak();
+      initXP();
+      initTip();
+      initRFPreview();
+      if (window.Engine) startCountdown();
+
+      // Award XP for daily visit
+      if (window.Engine) {
+        Engine.addXP(10);
+        App.updateXPBadge();
+        App.showToast('🌅 +10 XP for your daily visit!');
+      }
+    }
+
+    return {
+      init,
+      nextQuote,
+      prevQuote,
+      copyQuote,
+      revealQotd,
+      nextRF,
+      prevRF
+    };
+  })();
+
+  window.DailyHub = DailyHub;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+    DailyHub.init();
+  });
+  </script>
+</body>
+</html>

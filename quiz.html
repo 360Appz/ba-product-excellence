@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BA/PO Quiz Arena — Rapid Fire & Deep Dive questions">
+  <title>Quiz Arena · BA/PO Excellence</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── QUIZ PAGE EXTRA STYLES ──────────────────── */
+    .quiz-page-content {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .mode-card.rf { --card-accent: var(--secondary); }
+    .mode-card.dd { --card-accent: var(--amber); }
+
+    .mode-start-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--ease-spring);
+      color: white;
+      margin-top: var(--space-lg);
+      box-shadow: var(--shadow-md);
+    }
+    .mode-start-btn.rf-btn { background: var(--grad-fire); }
+    .mode-start-btn.dd-btn { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
+    .mode-start-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: var(--shadow-lg); }
+
+    /* Active mode indicator */
+    .mode-card.active-mode {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary), var(--shadow-md);
+    }
+
+    /* Quiz arena header */
+    .quiz-mode-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Explanation revealed after answer */
+    .answer-explanation {
+      margin-top: var(--space-md);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      background: var(--bg2);
+      border-left: 3px solid var(--emerald);
+      font-size: 0.875rem;
+      color: var(--text-2);
+      line-height: 1.7;
+      animation: fadeInUp 0.3s var(--ease-spring) both;
+      display: none;
+    }
+    .answer-explanation.visible { display: block; }
+
+    /* Score screen extras */
+    .score-stats-row {
+      display: flex;
+      gap: var(--space-xl);
+      justify-content: center;
+      margin-bottom: var(--space-xl);
+      flex-wrap: wrap;
+    }
+    .score-stat-item {
+      text-align: center;
+    }
+    .score-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: block;
+    }
+    .score-stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: var(--font-mono);
+    }
+
+    /* High score badge */
+    .high-score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--grad-fire);
+      color: white;
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+    }
+    .high-score-badge.hidden { display: none; }
+
+    /* Deep dive question card */
+    .dd-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      animation: fadeInUp 0.5s var(--ease-spring) both;
+    }
+
+    .dd-q-num {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--amber);
+      text-transform: uppercase;
+      margin-bottom: var(--space-md);
+    }
+
+    .dd-question {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--space-xl);
+    }
+
+    .dd-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-lg);
+    }
+
+    .dd-answer {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg) var(--space-xl);
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.8;
+      white-space: pre-line;
+      display: none;
+      animation: fadeInUp 0.4s var(--ease-spring) both;
+    }
+    .dd-answer.visible { display: block; }
+
+    .dd-nav {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      margin-top: var(--space-xl);
+      flex-wrap: wrap;
+    }
+
+    /* Urgency color for timer */
+    .urgent .timer-ring-fill { stroke: var(--rose) !important; }
+    .urgent .timer-number { color: var(--rose) !important; }
+  </style>
+</head>
+<body>
+  <div class="page-bg"></div>
+  <div class="orb orb-1" style="background:radial-gradient(circle,rgba(245,158,11,0.25) 0%,transparent 70%)"></div>
+  <div class="orb orb-2" style="background:radial-gradient(circle,rgba(244,63,94,0.2) 0%,transparent 70%)"></div>
+  <div class="particles"></div>
+  <div id="resultFlash" class="result-flash"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-logo">BA/PO ⚡ EXCELLENCE</a>
+    <div class="navbar-nav">
+      <a href="index.html"      class="nav-link">Home</a>
+      <a href="playbook.html"   class="nav-link">Playbook</a>
+      <a href="excellence.html" class="nav-link">Excellence</a>
+      <a href="quiz.html"       class="nav-link">Quiz</a>
+      <a href="daily.html"      class="nav-link">Daily Hub</a>
+    </div>
+    <div class="navbar-actions">
+      <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
+      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
+      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="page-content quiz-page-content">
+    <header class="page-header">
+      <div class="page-eyebrow">
+        <a href="index.html" class="back-link">← Back</a>
+        <span>·</span>
+        <span>Quiz Arena</span>
+      </div>
+      <h1 class="page-h1">
+        Quiz <span class="accent" style="background:var(--grad-fire);-webkit-background-clip:text;background-clip:text;">Arena</span>
+      </h1>
+      <p class="page-subtitle">Test your BA/PO knowledge. Earn XP. Beat your high score.</p>
+    </header>
+
+    <!-- MODE SELECTION SCREEN -->
+    <div id="modeScreen" class="quiz-wrapper">
+      <!-- High score display -->
+      <div id="highScoreDisplay" style="text-align:center;margin-bottom:var(--space-lg)"></div>
+
+      <div class="mode-selector">
+        <div class="mode-card rf" id="modeRF">
+          <span class="mode-icon">⚡</span>
+          <h3 class="mode-title">Rapid Fire</h3>
+          <p class="mode-desc">30 questions. 10 seconds each. Multiple choice. Score XP for correct answers. Bonus for speed.</p>
+          <button class="mode-start-btn rf-btn" onclick="Quiz.startRapidFire()">🚀 Start Rapid Fire</button>
+        </div>
+        <div class="mode-card dd" id="modeDD">
+          <span class="mode-icon">🧠</span>
+          <h3 class="mode-title">Deep Dive</h3>
+          <p class="mode-desc">15 deep questions with full answers. Study mode. Reveal at your pace. No timer, pure learning.</p>
+          <button class="mode-start-btn dd-btn" onclick="Quiz.startDeepDive()">🔍 Deep Dive</button>
+        </div>
+      </div>
+
+      <!-- Stats from previous games -->
+      <div id="prevStats" style="text-align:center;margin-top:var(--space-lg)"></div>
+    </div>
+
+    <!-- RAPID FIRE ARENA -->
+    <div id="rfArena" class="quiz-wrapper" style="display:none">
+      <div class="quiz-mode-label">⚡ RAPID FIRE MODE</div>
+
+      <div class="quiz-arena">
+        <!-- Top bar: progress + score + timer -->
+        <div class="quiz-topbar">
+          <span class="quiz-stat">Q <strong id="rfQNum">1</strong></span>
+          <div class="quiz-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="rfProgressBar">
+            <div class="quiz-progress-fill" id="rfProgressFill" style="width:0%"></div>
+          </div>
+          <div class="timer-ring" id="timerRing" aria-label="Time remaining">
+            <svg viewBox="0 0 70 70" width="72" height="72">
+              <circle class="timer-ring-bg" cx="35" cy="35" r="30"/>
+              <circle class="timer-ring-fill" cx="35" cy="35" r="30" id="timerCircle"
+                stroke-dasharray="188.5" stroke-dashoffset="0"/>
+            </svg>
+            <span class="timer-number" id="timerNum">10</span>
+          </div>
+          <span class="quiz-stat">Score <strong id="rfScore">0</strong></span>
+        </div>
+
+        <!-- Category badge + question -->
+        <div class="question-card">
+          <div class="question-meta">
+            <span class="question-badge" id="rfCategory">Foundation</span>
+            <span class="question-badge" style="background:rgba(16,185,129,0.1);color:var(--emerald);border-color:rgba(16,185,129,0.2)" id="rfCorrectCount">✓ 0</span>
+          </div>
+          <p class="question-text" id="rfQuestion">Loading question...</p>
+          <div class="answer-explanation" id="rfExplanation"></div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-grid" id="rfOptions" role="group" aria-label="Answer options"></div>
+      </div>
+    </div>
+
+    <!-- SCORE SCREEN -->
+    <div id="scoreScreen" class="quiz-wrapper" style="display:none">
+      <div class="score-screen">
+        <div id="newHighScore" class="high-score-badge hidden">🏆 NEW HIGH SCORE!</div>
+        <div class="score-ring-wrap">
+          <svg viewBox="0 0 180 180" width="180" height="180">
+            <defs>
+              <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#EC4899"/>
+              </linearGradient>
+            </defs>
+            <circle fill="none" stroke="var(--border)" stroke-width="12" cx="90" cy="90" r="72"/>
+            <circle fill="none" stroke="url(#scoreGrad)" stroke-width="12" cx="90" cy="90" r="72"
+              stroke-linecap="round"
+              stroke-dasharray="452.4"
+              stroke-dashoffset="452.4"
+              id="scoreRingFill"/>
+          </svg>
+          <span class="score-percent" id="scorePercent">0%</span>
+        </div>
+
+        <h2 class="score-title" id="scoreTitle">Quiz Complete!</h2>
+        <p class="score-sub" id="scoreSub">Here's how you did</p>
+
+        <div class="score-stats-row">
+          <div class="score-stat-item">
+            <span class="score-stat-num" id="scoreCorrect" style="color:var(--emerald)">0</span>
+            <span class="score-stat-label">Correct</span>
+          </div>
+          <div class="score-stat-item">
+            <span class="score-stat-num" id="scoreWrong" style="color:var(--rose)">0</span>
+            <span class="score-stat-label">Wrong</span>
+          </div>
+          <div class="score-stat-item">
+            <span class="score-stat-num" id="scoreTotal">0</span>
+            <span class="score-stat-label">Total</span>
+          </div>
+        </div>
+
+        <div class="xp-earned" id="xpEarnedBadge">⚡ +0 XP earned!</div>
+
+        <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;margin-bottom:var(--space-xl)">
+          <button class="btn btn-primary" onclick="Quiz.startRapidFire()">🔄 Play Again</button>
+          <button class="btn btn-outline" onclick="Quiz.startDeepDive()">🧠 Deep Dive</button>
+          <a href="index.html" class="btn btn-ghost">🏠 Home</a>
+        </div>
+
+        <!-- Wrong answers review -->
+        <div id="wrongAnswersReview" style="max-width:600px;margin:0 auto;text-align:left"></div>
+      </div>
+    </div>
+
+    <!-- DEEP DIVE SCREEN -->
+    <div id="ddScreen" class="quiz-wrapper" style="display:none">
+      <div class="quiz-mode-label">🧠 DEEP DIVE MODE</div>
+
+      <div id="ddContent" style="width:100%;max-width:760px">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="dd-nav" id="ddNav"></div>
+    </div>
+
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+  // ================================================================
+  // QUIZ GAME ENGINE
+  // ================================================================
+  const Quiz = (() => {
+    const TIMER_SECS = 10;
+    const CIRCUMFERENCE = 188.5;
+
+    let questions = [];
+    let current = 0;
+    let score = 0;
+    let correct = 0;
+    let answered = false;
+    let timer = null;
+    let wrongAnswers = [];
+
+    // ── SCREEN MANAGEMENT ───────────────────────
+    function showScreen(id) {
+      ['modeScreen','rfArena','scoreScreen','ddScreen'].forEach(s => {
+        const el = document.getElementById(s);
+        if (el) el.style.display = s === id ? 'flex' : 'none';
+      });
+    }
+
+    // ── RAPID FIRE ───────────────────────────────
+    function startRapidFire() {
+      if (window.SoundEngine) SoundEngine.start();
+      const raw = window.BAData ? BAData.QUIZ_QUESTIONS : [];
+      questions = window.Engine ? Engine.getDailyRapidFire() : [...raw];
+      current = 0; score = 0; correct = 0; wrongAnswers = [];
+      showScreen('rfArena');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      if (current >= questions.length) { endGame(); return; }
+      answered = false;
+      const q = questions[current];
+
+      // Update topbar
+      document.getElementById('rfQNum').textContent = current + 1;
+      document.getElementById('rfScore').textContent = score;
+      document.getElementById('rfCorrectCount').textContent = `✓ ${correct}`;
+      const pct = (current / questions.length) * 100;
+      document.getElementById('rfProgressFill').style.width = pct + '%';
+      document.getElementById('rfProgressBar').setAttribute('aria-valuenow', Math.round(pct));
+
+      // Question text
+      document.getElementById('rfQuestion').textContent = q.q;
+      document.getElementById('rfCategory').textContent = q.cat;
+      document.getElementById('rfExplanation').classList.remove('visible');
+      document.getElementById('rfExplanation').textContent = '';
+
+      // Options
+      const grid = document.getElementById('rfOptions');
+      grid.innerHTML = '';
+      const letters = ['A','B','C','D'];
+      q.opts.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt}</span>`;
+        btn.setAttribute('aria-label', `Option ${letters[i]}: ${opt}`);
+        btn.addEventListener('click', () => selectAnswer(i, btn));
+        grid.appendChild(btn);
+      });
+
+      // Timer
+      if (timer) timer.stop();
+      resetTimer();
+      timer = Engine.createTimer(TIMER_SECS,
+        (remaining, offset) => {
+          document.getElementById('timerNum').textContent = remaining;
+          document.getElementById('timerCircle').style.strokeDashoffset =
+            CIRCUMFERENCE - (remaining / TIMER_SECS) * CIRCUMFERENCE;
+          if (remaining <= 3) {
+            document.getElementById('timerRing').classList.add('urgent');
+            if (window.SoundEngine) SoundEngine.urgentTick();
+          }
+          if (remaining > 0 && window.SoundEngine && remaining <= 3) {
+            // already played urgentTick
+          } else if (remaining > 3 && remaining < TIMER_SECS && window.SoundEngine) {
+            SoundEngine.tick();
+          }
+        },
+        () => { if (!answered) selectAnswer(-1, null); } // time out
+      );
+      timer.start();
+    }
+
+    function resetTimer() {
+      document.getElementById('timerNum').textContent = TIMER_SECS;
+      document.getElementById('timerCircle').style.strokeDashoffset = '0';
+      document.getElementById('timerRing').classList.remove('urgent');
+    }
+
+    function selectAnswer(idx, btn) {
+      if (answered) return;
+      answered = true;
+      if (timer) timer.stop();
+
+      const q = questions[current];
+      const isCorrect = idx === q.a;
+
+      // Visual feedback on all buttons
+      const btns = document.querySelectorAll('#rfOptions .option-btn');
+      btns.forEach((b, i) => {
+        b.disabled = true;
+        if (i === q.a) b.classList.add('correct');
+        else if (i === idx) b.classList.add('wrong');
+      });
+
+      // Score
+      if (isCorrect) {
+        correct++;
+        const timeBonus = timer ? timer.getRemaining() : 0;
+        const pts = 10 + Math.floor(timeBonus * 2);
+        score += pts;
+        if (window.SoundEngine) SoundEngine.correct();
+        App.showResultFlash(true);
+        App.showToast(`+${pts} pts! 🎯`);
+      } else {
+        if (window.SoundEngine) SoundEngine.wrong();
+        App.showResultFlash(false);
+        wrongAnswers.push({ q: q.q, yourAnswer: idx >= 0 ? q.opts[idx] : 'Timed out', correct: q.opts[q.a] });
+      }
+
+      // Show explanation (the correct answer as a mini insight)
+      const expEl = document.getElementById('rfExplanation');
+      expEl.textContent = `✓ ${q.opts[q.a]}`;
+      expEl.classList.add('visible');
+
+      // Auto advance
+      setTimeout(() => {
+        current++;
+        if (current < questions.length) renderQuestion();
+        else endGame();
+      }, 1400);
+    }
+
+    function endGame() {
+      if (timer) timer.stop();
+      const total = questions.length;
+      const pct = Math.round((correct / total) * 100);
+
+      // Record result
+      let xpEarned = 0;
+      if (window.Engine) {
+        const result = Engine.recordQuizResult(correct, total);
+        xpEarned = result.xpEarned;
+        App.updateXPBadge();
+      }
+      if (window.SoundEngine) SoundEngine.quizComplete(pct);
+
+      // Populate score screen
+      document.getElementById('scorePercent').textContent = pct + '%';
+      document.getElementById('scoreCorrect').textContent = correct;
+      document.getElementById('scoreWrong').textContent = total - correct;
+      document.getElementById('scoreTotal').textContent = total;
+      document.getElementById('xpEarnedBadge').textContent = `⚡ +${xpEarned} XP earned!`;
+
+      const titles = {
+        100: '🏆 PERFECT SCORE!',
+        80:  '🔥 Outstanding!',
+        60:  '⚡ Solid Work!',
+        40:  '📖 Keep Studying!',
+        0:   '💪 Don\'t Give Up!'
+      };
+      const subs = {
+        100: 'You are a BA/PO legend. Unstoppable.',
+        80:  'You clearly know your stuff. The arena is yours.',
+        60:  'Good foundation. Review the tricky ones.',
+        40:  'More time in the Playbook will sharpen your edge.',
+        0:   'Every expert was once a beginner. Back to the Playbook!'
+      };
+      let titleKey = 0;
+      [40, 60, 80, 100].forEach(k => { if (pct >= k) titleKey = k; });
+      document.getElementById('scoreTitle').textContent = titles[titleKey];
+      document.getElementById('scoreSub').textContent = subs[titleKey];
+
+      // Animate ring
+      const state = window.Engine ? Engine.getState() : {};
+      const isNew = state.quizHighScore === pct;
+      if (isNew && pct > 0) {
+        document.getElementById('newHighScore').classList.remove('hidden');
+        if (window.SoundEngine) SoundEngine.levelUp();
+      }
+
+      setTimeout(() => {
+        const fill = document.getElementById('scoreRingFill');
+        fill.style.transition = 'stroke-dashoffset 1.5s ease';
+        fill.style.strokeDashoffset = 452.4 - (pct / 100) * 452.4;
+      }, 300);
+
+      // Wrong answers review
+      if (wrongAnswers.length > 0) {
+        const rev = document.getElementById('wrongAnswersReview');
+        rev.innerHTML = `<h3 style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:var(--space-lg);text-align:center">📝 Review Wrong Answers</h3>
+          ${wrongAnswers.map((w, i) => `
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-sm);border-left:3px solid var(--rose)">
+              <p style="font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:var(--space-xs)">${i+1}. ${w.q}</p>
+              <p style="font-size:0.8rem;color:var(--rose);margin-bottom:2px">✗ Your answer: ${w.yourAnswer}</p>
+              <p style="font-size:0.8rem;color:var(--emerald)">✓ Correct: ${w.correct}</p>
+            </div>
+          `).join('')}`;
+      }
+
+      showScreen('scoreScreen');
+    }
+
+    // ── DEEP DIVE ─────────────────────────────────
+    let ddQuestions = [];
+    let ddCurrent = 0;
+
+    function startDeepDive() {
+      if (window.Engine) {
+        Engine.addXP(10);
+        App.updateXPBadge();
+      }
+      ddQuestions = window.BAData ? [...BAData.QOTD_POOL] : [];
+      if (window.Engine) ddQuestions = Engine.seededShuffle(ddQuestions, Engine.getDaySeed() + 99);
+      ddCurrent = 0;
+      showScreen('ddScreen');
+      renderDDQuestion();
+    }
+
+    function renderDDQuestion() {
+      const q = ddQuestions[ddCurrent];
+      if (!q) return;
+
+      const content = document.getElementById('ddContent');
+      content.innerHTML = `
+        <div class="dd-card">
+          <p class="dd-q-num">Question ${ddCurrent + 1} of ${ddQuestions.length} · Deep Dive</p>
+          <p class="dd-question">${q.q}</p>
+          <div class="dd-actions">
+            <button class="btn btn-primary" onclick="Quiz.revealDDAnswer()" id="ddRevealBtn">
+              💡 Reveal Answer
+            </button>
+            ${ddCurrent < ddQuestions.length - 1
+              ? `<button class="btn btn-ghost" onclick="Quiz.nextDDQuestion()">Skip →</button>`
+              : ''}
+          </div>
+          <div class="dd-answer" id="ddAnswer">${q.a}</div>
+        </div>
+      `;
+
+      // Update nav
+      const nav = document.getElementById('ddNav');
+      nav.innerHTML = `
+        <button class="btn btn-ghost btn-sm" onclick="Quiz.prevDDQuestion()" ${ddCurrent === 0 ? 'disabled' : ''}>← Previous</button>
+        <span style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted);padding:0 var(--space-sm)">${ddCurrent+1} / ${ddQuestions.length}</span>
+        <button class="btn btn-ghost btn-sm" onclick="Quiz.nextDDQuestion()" ${ddCurrent === ddQuestions.length - 1 ? 'disabled' : ''}>Next →</button>
+      `;
+    }
+
+    function revealDDAnswer() {
+      const ans = document.getElementById('ddAnswer');
+      const btn = document.getElementById('ddRevealBtn');
+      if (ans) {
+        ans.classList.add('visible');
+        if (btn) btn.style.display = 'none';
+        if (window.SoundEngine) SoundEngine.reveal();
+      }
+    }
+
+    function nextDDQuestion() {
+      if (ddCurrent < ddQuestions.length - 1) {
+        ddCurrent++;
+        renderDDQuestion();
+        if (window.SoundEngine) SoundEngine.click();
+      } else {
+        showScreen('modeScreen');
+      }
+    }
+
+    function prevDDQuestion() {
+      if (ddCurrent > 0) {
+        ddCurrent--;
+        renderDDQuestion();
+        if (window.SoundEngine) SoundEngine.click();
+      }
+    }
+
+    // ── PUBLIC API ───────────────────────────────
+    return {
+      startRapidFire,
+      startDeepDive,
+      revealDDAnswer,
+      nextDDQuestion,
+      prevDDQuestion,
+      endGame
+    };
+  })();
+
+  window.Quiz = Quiz;
+
+  // ── INIT ─────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+
+    // Show previous high score
+    if (window.Engine) {
+      const state = Engine.getState();
+      const hsEl = document.getElementById('highScoreDisplay');
+      if (hsEl && state.quizHighScore > 0) {
+        hsEl.innerHTML = `<div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-muted)">
+          🏆 Your High Score: <strong style="color:var(--primary)">${state.quizHighScore}%</strong>
+          &nbsp;·&nbsp;
+          Total Correct: <strong style="color:var(--emerald)">${state.totalCorrect}</strong>
+        </div>`;
+      }
+
+      // Previous stats
+      const psEl = document.getElementById('prevStats');
+      if (psEl && state.totalAnswered > 0) {
+        const acc = Math.round((state.totalCorrect / state.totalAnswered) * 100);
+        psEl.innerHTML = `<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted)">
+          Overall accuracy: <strong style="color:var(--amber)">${acc}%</strong>
+          across ${state.totalAnswered} questions
+        </div>`;
+      }
+    }
+  });
+  </script>
+</body>
+</html>
