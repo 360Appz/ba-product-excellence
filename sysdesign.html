@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BA/PO Communication Playbook — 20 sections, word for word">
-  <title>BA/PO Communication Playbook · BA/PO Excellence</title>
+  <meta name="description" content="BA/PO System Design Guide — 15 modules covering the full system design interview framework">
+  <title>System Design Guide · BA/PO Excellence</title>
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
   <div class="page-bg"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <div class="orb orb-1" style="background:radial-gradient(circle,rgba(99,102,241,0.25) 0%,transparent 70%)"></div>
+  <div class="orb orb-2" style="background:radial-gradient(circle,rgba(139,92,246,0.2) 0%,transparent 70%)"></div>
   <div class="particles"></div>
   <div id="resultFlash" class="result-flash"></div>
 
@@ -39,39 +39,38 @@
 
   <!-- Main -->
   <main class="page-content">
-    <!-- Page Header -->
     <header class="page-header">
       <div class="page-eyebrow">
         <a href="index.html" class="back-link">← Back</a>
         <span>·</span>
-        <span>BA/PO Communication Playbook</span>
+        <span>System Design Guide</span>
       </div>
       <h1 class="page-h1">
-        Communication <span class="accent">Playbook</span>
+        System <span class="accent" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;background-clip:text;">Design</span>
       </h1>
       <p class="page-subtitle">
-        The complete neutral, comprehensive playbook for corporate, startup, enterprise, agile, waterfall, hybrid, remote, and government environments. Word for word.
+        The BA/PO system design interview framework — 14 steps, architecture concepts, deliverables, prioritization, acceptance criteria, and MVP templates.
       </p>
     </header>
 
     <!-- Intro Banner -->
-    <div class="intro-banner" id="introBanner"></div>
+    <div class="intro-banner" id="introBanner" style="--grad-primary:linear-gradient(135deg,#6366F1,#8B5CF6)"></div>
 
     <!-- Carousel Section -->
-    <section class="carousel-section" aria-label="Playbook carousel">
+    <section class="carousel-section" aria-label="System Design guide carousel">
       <div class="carousel-header">
-        <h2 class="carousel-title">📖 Sections</h2>
-        <span class="carousel-counter" id="carouselCounter" aria-live="polite">01 / 20</span>
+        <h2 class="carousel-title">🏗️ Modules</h2>
+        <span class="carousel-counter" id="carouselCounter" aria-live="polite">01 / 15</span>
       </div>
 
-      <div class="carousel-track-wrapper" id="carouselWrapper" role="region" aria-label="Section content">
+      <div class="carousel-track-wrapper" id="carouselWrapper" role="region" aria-label="Module content">
         <!-- Card rendered by JS -->
       </div>
 
       <nav class="carousel-nav" aria-label="Carousel navigation">
-        <button id="prevBtn" class="nav-arrow" aria-label="Previous section" disabled>←</button>
-        <span class="nav-progress" id="navProgress" aria-live="polite">1 of 20</span>
-        <button id="nextBtn" class="nav-arrow" aria-label="Next section">→</button>
+        <button id="prevBtn" class="nav-arrow" aria-label="Previous module" disabled>←</button>
+        <span class="nav-progress" id="navProgress" aria-live="polite">1 of 15</span>
+        <button id="nextBtn" class="nav-arrow" aria-label="Next module">→</button>
       </nav>
 
       <p class="keyboard-hint">
@@ -81,6 +80,7 @@
   </main>
 
   <script src="js/data.js"></script>
+  <script src="js/data-sysdesign.js"></script>
   <script src="js/engine.js"></script>
   <script src="js/sounds.js"></script>
   <script src="js/app.js"></script>
@@ -90,18 +90,18 @@
 
       // Populate intro banner
       const banner = document.getElementById('introBanner');
-      if (banner && window.BAData) {
-        banner.innerHTML = `<strong>The core thesis:</strong> ${BAData.COMMS_INTRO.replace(/\n/g,'<br>')}`;
+      if (banner && window.SYSDESIGN_DATA) {
+        banner.innerHTML = `<strong>About this guide:</strong> ${SYSDESIGN_DATA.SYSDESIGN_INTRO.replace(/\n/g,'<br>')}`;
       }
 
-      // Build carousel with shuffled (hourly) sections
+      // Build carousel with hourly shuffle
       const sections = window.Engine
-        ? Engine.getHourlyCardOrder(BAData.COMMS_SECTIONS)
-        : BAData.COMMS_SECTIONS;
+        ? Engine.getHourlyCardOrder(SYSDESIGN_DATA.SYSDESIGN_SECTIONS)
+        : SYSDESIGN_DATA.SYSDESIGN_SECTIONS;
 
       App.createCarousel(sections, App.renderContentCard);
 
-      // Award XP for visit
+      // Award XP
       if (window.Engine) {
         Engine.addXP(5);
         App.updateXPBadge();

@@ -164,7 +164,16 @@
       display: none;
       animation: fadeInUp 0.4s var(--ease-spring) both;
     }
-    .dd-answer.visible { display: block; }
+    .dd-answer.visible {
+      display: block;
+      height: 280px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    .dd-answer::-webkit-scrollbar { width: 5px; }
+    .dd-answer::-webkit-scrollbar-track { background: transparent; }
+    .dd-answer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .dd-answer::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
     .dd-nav {
       display: flex;
@@ -188,18 +197,24 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="index.html" class="navbar-logo">BA/PO ⚡ EXCELLENCE</a>
-    <div class="navbar-nav">
+    <a href="index.html" class="navbar-logo">BA/PO ⚡<span class="logo-xl"> EXCELLENCE</span></a>
+    <div class="navbar-nav" id="navbarNav">
       <a href="index.html"      class="nav-link">Home</a>
       <a href="playbook.html"   class="nav-link">Playbook</a>
       <a href="excellence.html" class="nav-link">Excellence</a>
       <a href="quiz.html"       class="nav-link">Quiz</a>
       <a href="daily.html"      class="nav-link">Daily Hub</a>
+      <a href="babok.html"      class="nav-link">BABOK</a>
+      <a href="sysdesign.html"  class="nav-link">Sys Design</a>
+      <a href="interviews.html" class="nav-link">Interviews</a>
+      <a href="backend.html"    class="nav-link">Backend</a>
+      <a href="erp.html"        class="nav-link">ERP</a>
     </div>
     <div class="navbar-actions">
       <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
-      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
-      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+      <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -606,8 +621,10 @@
     function revealDDAnswer() {
       const ans = document.getElementById('ddAnswer');
       const btn = document.getElementById('ddRevealBtn');
+      const card = document.querySelector('.dd-card');
       if (ans) {
         ans.classList.add('visible');
+        if (card) card.classList.add('answer-shown');
         if (btn) btn.style.display = 'none';
         if (window.SoundEngine) SoundEngine.reveal();
       }
