@@ -191,9 +191,10 @@
       font-family: var(--font-mono);
     }
 
-    /* ── PORTAL SECTION ────────────────────────────────── */
+    /* ── PORTAL CAROUSEL ───────────────────────────────── */
+    /* Section: no side padding — carousel handles its own spacing */
     .portals-section {
-      padding: 0 var(--space-xl) var(--space-4xl);
+      padding: 0 0 var(--space-4xl);
     }
 
     .portals-section-label {
@@ -205,6 +206,107 @@
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: var(--space-xl);
+      padding: 0 var(--space-xl);
+    }
+
+    /* Carousel wrapper: constrained width + space for arrow buttons */
+    .portal-carousel {
+      position: relative;
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 52px;   /* side space for the arrow buttons */
+      box-sizing: border-box;
+    }
+
+    /* Viewport clips the sliding track — must have definite width */
+    .portal-carousel-viewport {
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+    }
+
+    /* Track: same explicit width as the viewport so 100% resolves correctly */
+    .portal-carousel-track {
+      display: flex;
+      width: 100%;
+      transition: transform 0.4s var(--ease-spring);
+      will-change: transform;
+    }
+
+    /* Each card = exactly one viewport width, no shrink/grow */
+    .portal-carousel-track .portal-card {
+      flex: 0 0 100%;
+      width: 100%;
+      min-width: 0;
+      /* Ensure card content can wrap and expand height freely */
+      height: auto;
+      box-sizing: border-box;
+    }
+
+    .portal-carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 1.5rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all var(--dur-fast) var(--ease-spring);
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .portal-carousel-btn:hover:not(:disabled) {
+      transform: translateY(-50%) scale(1.12);
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(124,58,237,0.08);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .portal-carousel-btn:active:not(:disabled) {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .portal-carousel-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
+    .portal-carousel-prev { left: 4px; }
+    .portal-carousel-next { right: 4px; }
+
+    .portal-carousel-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: var(--space-lg);
+    }
+
+    .portal-counter {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 600px) {
+      .portal-carousel {
+        padding: 0 40px;
+      }
+      .portal-carousel-btn { width: 36px; height: 36px; font-size: 1.25rem; }
+      .portal-carousel-prev { left: 2px; }
+      .portal-carousel-next { right: 2px; }
     }
 
     /* ── FOOTER ───────────────────────────────────────── */
@@ -229,18 +331,24 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <span class="navbar-logo">BA/PO ⚡ EXCELLENCE</span>
-    <div class="navbar-nav">
-      <a href="index.html"     class="nav-link">Home</a>
-      <a href="playbook.html"  class="nav-link">Playbook</a>
+    <span class="navbar-logo">BA/PO ⚡<span class="logo-xl"> EXCELLENCE</span></span>
+    <div class="navbar-nav" id="navbarNav">
+      <a href="index.html"      class="nav-link">Home</a>
+      <a href="playbook.html"   class="nav-link">Playbook</a>
       <a href="excellence.html" class="nav-link">Excellence</a>
-      <a href="quiz.html"      class="nav-link">Quiz</a>
-      <a href="daily.html"     class="nav-link">Daily Hub</a>
+      <a href="quiz.html"       class="nav-link">Quiz</a>
+      <a href="daily.html"      class="nav-link">Daily Hub</a>
+      <a href="babok.html"      class="nav-link">BABOK</a>
+      <a href="sysdesign.html"  class="nav-link">Sys Design</a>
+      <a href="interviews.html" class="nav-link">Interviews</a>
+      <a href="backend.html"    class="nav-link">Backend</a>
+      <a href="erp.html"        class="nav-link">ERP</a>
     </div>
     <div class="navbar-actions">
       <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
-      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
-      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+      <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -251,8 +359,11 @@
       <div class="hero-badge-group">
         <span class="hero-badge badge-purple">20 Comm Strategies</span>
         <span class="hero-badge badge-cyan">12 Excellence Modules</span>
-        <span class="hero-badge badge-pink">30 Quiz Questions</span>
+        <span class="hero-badge badge-pink">30+ Quiz Questions</span>
         <span class="hero-badge badge-emerald">Daily Q & Quote</span>
+        <span class="hero-badge badge-purple">14 BABOK Modules</span>
+        <span class="hero-badge badge-cyan">15 System Design Modules</span>
+        <span class="hero-badge badge-pink">37 Interview Q&As</span>
       </div>
 
       <div class="hero-title-block">
@@ -276,16 +387,20 @@
           <span class="stat-label">Excellence Parts</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">30</span>
+          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">14</span>
+          <span class="stat-label">BABOK Modules</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">15</span>
+          <span class="stat-label">System Design</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#EC4899,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">37</span>
+          <span class="stat-label">Interview Q&As</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">58</span>
           <span class="stat-label">Quiz Questions</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">25</span>
-          <span class="stat-label">Quotes</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" style="background:linear-gradient(135deg,#EC4899,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">15</span>
-          <span class="stat-label">QoTD Cards</span>
         </div>
       </div>
 
@@ -306,61 +421,127 @@
     <!-- PORTALS -->
     <section class="portals-section">
       <p class="portals-section-label">⚡ Choose your adventure ⚡</p>
-      <div class="portals-grid">
-        <a href="playbook.html" class="portal-card portal-playbook" aria-label="BA/PO Communication Playbook">
-          <span class="portal-icon">📖</span>
-          <span class="portal-tag">PLAYBOOK</span>
-          <h2 class="portal-title">BA/PO Communication Playbook</h2>
-          <p class="portal-desc">20 sections covering every communication scenario — from Agile ceremonies to executive updates, stakeholder archetypes to difficult conversation scripts. Word for word.</p>
-          <div class="portal-meta">
-            <span class="portal-count">20 sections · Carousel</span>
-            <span class="portal-arrow">→</span>
-          </div>
-        </a>
+      <div class="portal-carousel">
+        <div class="portal-carousel-viewport">
+          <div class="portal-carousel-track" id="portalCarouselTrack">
 
-        <a href="excellence.html" class="portal-card portal-excellence" aria-label="BA/PO Excellence Guide">
-          <span class="portal-icon">⚡</span>
-          <span class="portal-tag">EXCELLENCE</span>
-          <h2 class="portal-title">BA/PO Excellence Guide</h2>
-          <p class="portal-desc">12 modules covering elite BA/PO standards — requirements gathering, stakeholder management, backlog hygiene, UAT, metrics, and the exemplary mindset.</p>
-          <div class="portal-meta">
-            <span class="portal-count">12 modules · Carousel</span>
-            <span class="portal-arrow">→</span>
-          </div>
-        </a>
+            <a href="playbook.html" class="portal-card portal-playbook" aria-label="BA/PO Communication Playbook">
+              <span class="portal-icon">📖</span>
+              <span class="portal-tag">PLAYBOOK</span>
+              <h2 class="portal-title">BA/PO Communication Playbook</h2>
+              <p class="portal-desc">20 sections covering every communication scenario — from Agile ceremonies to executive updates, stakeholder archetypes to difficult conversation scripts. Word for word.</p>
+              <div class="portal-meta">
+                <span class="portal-count">20 sections · Carousel</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
 
-        <a href="quiz.html" class="portal-card portal-quiz" aria-label="Rapid Fire Quiz">
-          <span class="portal-icon">🎯</span>
-          <span class="portal-tag">QUIZ ARENA</span>
-          <h2 class="portal-title">Rapid Fire Quiz</h2>
-          <p class="portal-desc">30 questions. 10 seconds each. Test everything from BLUF to RAID logs, stakeholder archetypes to the Communication Ladder. Earn XP. Break your high score.</p>
-          <div class="portal-meta">
-            <span class="portal-count">30 questions · Timed</span>
-            <span class="portal-arrow">→</span>
-          </div>
-        </a>
+            <a href="excellence.html" class="portal-card portal-excellence" aria-label="BA/PO Excellence Guide">
+              <span class="portal-icon">⚡</span>
+              <span class="portal-tag">EXCELLENCE</span>
+              <h2 class="portal-title">BA/PO Excellence Guide</h2>
+              <p class="portal-desc">12 modules covering elite BA/PO standards — requirements gathering, stakeholder management, backlog hygiene, UAT, metrics, and the exemplary mindset.</p>
+              <div class="portal-meta">
+                <span class="portal-count">12 modules · Carousel</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
 
-        <a href="daily.html" class="portal-card portal-daily" aria-label="Daily Hub">
-          <span class="portal-icon">📅</span>
-          <span class="portal-tag">DAILY HUB</span>
-          <h2 class="portal-title">Daily Hub</h2>
-          <p class="portal-desc">Quote of the Day. Question of the Day. Rapid Fire deck. All shuffled daily using a seeded algorithm — fresh insights every morning, consistent through the day.</p>
-          <div class="portal-meta">
-            <span class="portal-count">Daily refresh · Seeded</span>
-            <span class="portal-arrow">→</span>
-          </div>
-        </a>
+            <a href="quiz.html" class="portal-card portal-quiz" aria-label="Rapid Fire Quiz">
+              <span class="portal-icon">🎯</span>
+              <span class="portal-tag">QUIZ ARENA</span>
+              <h2 class="portal-title">Rapid Fire Quiz</h2>
+              <p class="portal-desc">30 questions. 10 seconds each. Test everything from BLUF to RAID logs, stakeholder archetypes to the Communication Ladder. Earn XP. Break your high score.</p>
+              <div class="portal-meta">
+                <span class="portal-count">30 questions · Timed</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
 
-        <a href="excellence.html#mindset" class="portal-card portal-mission" aria-label="The Exemplary Mindset">
-          <span class="portal-icon">🧠</span>
-          <span class="portal-tag">MINDSET</span>
-          <h2 class="portal-title">The Exemplary BA/PO Mindset</h2>
-          <p class="portal-desc">"You are the voice of the user. The protector of why. The translator. The realist." The complete exemplary mindset, skill progression, and 90-day plan.</p>
-          <div class="portal-meta">
-            <span class="portal-count">Skills · Career path</span>
-            <span class="portal-arrow">→</span>
-          </div>
-        </a>
+            <a href="daily.html" class="portal-card portal-daily" aria-label="Daily Hub">
+              <span class="portal-icon">📅</span>
+              <span class="portal-tag">DAILY HUB</span>
+              <h2 class="portal-title">Daily Hub</h2>
+              <p class="portal-desc">Quote of the Day. Question of the Day. Rapid Fire deck. All shuffled daily using a seeded algorithm — fresh insights every morning, consistent through the day.</p>
+              <div class="portal-meta">
+                <span class="portal-count">Daily refresh · Seeded</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="excellence.html#mindset" class="portal-card portal-mission" aria-label="The Exemplary Mindset">
+              <span class="portal-icon">🧠</span>
+              <span class="portal-tag">MINDSET</span>
+              <h2 class="portal-title">The Exemplary BA/PO Mindset</h2>
+              <p class="portal-desc">"You are the voice of the user. The protector of why. The translator. The realist." The complete exemplary mindset, skill progression, and 90-day plan.</p>
+              <div class="portal-meta">
+                <span class="portal-count">Skills · Career path</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="babok.html" class="portal-card" style="--portal-accent:#F59E0B" aria-label="BABOK Guide">
+              <span class="portal-icon">📚</span>
+              <span class="portal-tag" style="color:#F59E0B;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.08)">BABOK</span>
+              <h2 class="portal-title">BABOK Guide</h2>
+              <p class="portal-desc">Complete BABOK v3 coverage — all 6 knowledge areas, Bloom's Taxonomy, Business Analysis Planning, Strategy Analysis, and CBAP/CCBA certification prep.</p>
+              <div class="portal-meta">
+                <span class="portal-count">14 modules · Carousel</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="sysdesign.html" class="portal-card" style="--portal-accent:#6366F1" aria-label="System Design Guide">
+              <span class="portal-icon">🏗️</span>
+              <span class="portal-tag" style="color:#6366F1;border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.08)">SYSTEM DESIGN</span>
+              <h2 class="portal-title">System Design Guide</h2>
+              <p class="portal-desc">The BA/PO system design interview framework — 14-step process, architecture concepts, deliverables checklist, prioritization, acceptance criteria, and MVP templates.</p>
+              <div class="portal-meta">
+                <span class="portal-count">15 modules · Carousel</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="interviews.html" class="portal-card" style="--portal-accent:#EC4899" aria-label="Interview Q&A">
+              <span class="portal-icon">🎤</span>
+              <span class="portal-tag" style="color:#EC4899;border-color:rgba(236,72,153,0.3);background:rgba(236,72,153,0.08)">INTERVIEWS</span>
+              <h2 class="portal-title">Interview Q&amp;A</h2>
+              <p class="portal-desc">37 interview questions with model answers — core BA skills, SQL tools, STAR behavioral, Agile & Scrum, banking/fintech domain knowledge, and case studies.</p>
+              <div class="portal-meta">
+                <span class="portal-count">37 Q&As · 10 modules</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="backend.html" class="portal-card" style="--portal-accent:#0EA5E9" aria-label="Backend Fundamentals">
+              <span class="portal-icon">⚙️</span>
+              <span class="portal-tag" style="color:#0EA5E9;border-color:rgba(14,165,233,0.3);background:rgba(14,165,233,0.08)">BACKEND</span>
+              <h2 class="portal-title">Backend Fundamentals</h2>
+              <p class="portal-desc">Core backend concepts for BAs & POs — APIs, databases, microservices, authentication, caching, and system integration patterns explained in business terms.</p>
+              <div class="portal-meta">
+                <span class="portal-count">Modules · Carousel</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+            <a href="erp.html" class="portal-card" style="--portal-accent:#8B5CF6" aria-label="ERP Guide">
+              <span class="portal-icon">🏢</span>
+              <span class="portal-tag" style="color:#8B5CF6;border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.08)">ERP</span>
+              <h2 class="portal-title">ERP Guide</h2>
+              <p class="portal-desc">Enterprise Resource Planning from a BA/PO lens — modules, business processes, integration touchpoints, data flows, and how to gather requirements for ERP implementations.</p>
+              <div class="portal-meta">
+                <span class="portal-count">Modules · Carousel</span>
+                <span class="portal-arrow">→</span>
+              </div>
+            </a>
+
+          </div><!-- /track -->
+        </div><!-- /viewport -->
+        <button class="portal-carousel-btn portal-carousel-prev" id="portalPrev" aria-label="Previous portal">‹</button>
+        <button class="portal-carousel-btn portal-carousel-next" id="portalNext" aria-label="Next portal">›</button>
+      </div><!-- /carousel -->
+      <div class="portal-carousel-footer">
+        <span class="portal-counter" id="portalCounter">1 / 10</span>
       </div>
     </section>
 
@@ -376,6 +557,54 @@
   <script src="js/sounds.js"></script>
   <script src="js/app.js"></script>
   <script>
+    // ── PORTAL CAROUSEL ──────────────────────────────────
+    function initPortalCarousel() {
+      const track = document.getElementById('portalCarouselTrack');
+      const prevBtn = document.getElementById('portalPrev');
+      const nextBtn = document.getElementById('portalNext');
+      const counter = document.getElementById('portalCounter');
+      if (!track) return;
+
+      const cards = Array.from(track.querySelectorAll('.portal-card'));
+      const total = cards.length;
+      let current = 0;
+
+      // Pin each card to exactly the viewport width (cross-browser reliable)
+      function syncWidths() {
+        const vpW = track.parentElement.offsetWidth;
+        cards.forEach(c => { c.style.width = vpW + 'px'; });
+      }
+      syncWidths();
+      window.addEventListener('resize', syncWidths);
+
+      function update() {
+        track.style.transform = 'translateX(-' + (current * 100) + '%)';
+        if (counter) counter.textContent = (current + 1) + ' / ' + total;
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === total - 1;
+      }
+
+      function goTo(idx) {
+        current = Math.max(0, Math.min(total - 1, idx));
+        update();
+        if (window.SoundEngine) SoundEngine.hover();
+      }
+
+      prevBtn.addEventListener('click', () => goTo(current - 1));
+      nextBtn.addEventListener('click', () => goTo(current + 1));
+
+      // Touch / swipe support
+      let touchStartX = 0;
+      const viewport = track.parentElement;
+      viewport.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      viewport.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+      });
+
+      update();
+    }
+
     // ── TICKER POPULATION ─────────────────────────
     function populateTicker() {
       const items = [
@@ -409,6 +638,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       initApp();
       initPortalCards();
+      initPortalCarousel();
       populateTicker();
 
       // Animate stat numbers
