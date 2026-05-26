@@ -229,18 +229,22 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <span class="navbar-logo">BA/PO ⚡ EXCELLENCE</span>
-    <div class="navbar-nav">
-      <a href="index.html"     class="nav-link">Home</a>
-      <a href="playbook.html"  class="nav-link">Playbook</a>
+    <span class="navbar-logo">BA/PO ⚡<span class="logo-xl"> EXCELLENCE</span></span>
+    <div class="navbar-nav" id="navbarNav">
+      <a href="index.html"      class="nav-link">Home</a>
+      <a href="playbook.html"   class="nav-link">Playbook</a>
       <a href="excellence.html" class="nav-link">Excellence</a>
-      <a href="quiz.html"      class="nav-link">Quiz</a>
-      <a href="daily.html"     class="nav-link">Daily Hub</a>
+      <a href="quiz.html"       class="nav-link">Quiz</a>
+      <a href="daily.html"      class="nav-link">Daily Hub</a>
+      <a href="babok.html"      class="nav-link">BABOK</a>
+      <a href="sysdesign.html"  class="nav-link">Sys Design</a>
+      <a href="interviews.html" class="nav-link">Interviews</a>
     </div>
     <div class="navbar-actions">
       <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
-      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
-      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+      <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -251,8 +255,11 @@
       <div class="hero-badge-group">
         <span class="hero-badge badge-purple">20 Comm Strategies</span>
         <span class="hero-badge badge-cyan">12 Excellence Modules</span>
-        <span class="hero-badge badge-pink">30 Quiz Questions</span>
+        <span class="hero-badge badge-pink">30+ Quiz Questions</span>
         <span class="hero-badge badge-emerald">Daily Q & Quote</span>
+        <span class="hero-badge badge-purple">14 BABOK Modules</span>
+        <span class="hero-badge badge-cyan">15 System Design Modules</span>
+        <span class="hero-badge badge-pink">37 Interview Q&As</span>
       </div>
 
       <div class="hero-title-block">
@@ -276,16 +283,20 @@
           <span class="stat-label">Excellence Parts</span>
         </div>
         <div class="stat-item">
-          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">30</span>
+          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">14</span>
+          <span class="stat-label">BABOK Modules</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">15</span>
+          <span class="stat-label">System Design</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#EC4899,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">37</span>
+          <span class="stat-label">Interview Q&As</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" style="background:linear-gradient(135deg,#F59E0B,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">58</span>
           <span class="stat-label">Quiz Questions</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">25</span>
-          <span class="stat-label">Quotes</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num" style="background:linear-gradient(135deg,#EC4899,#F43F5E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">15</span>
-          <span class="stat-label">QoTD Cards</span>
         </div>
       </div>
 
@@ -358,6 +369,39 @@
           <p class="portal-desc">"You are the voice of the user. The protector of why. The translator. The realist." The complete exemplary mindset, skill progression, and 90-day plan.</p>
           <div class="portal-meta">
             <span class="portal-count">Skills · Career path</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="babok.html" class="portal-card" style="--portal-accent:#F59E0B" aria-label="BABOK Guide">
+          <span class="portal-icon">📚</span>
+          <span class="portal-tag" style="color:#F59E0B;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.08)">BABOK</span>
+          <h2 class="portal-title">BABOK Guide</h2>
+          <p class="portal-desc">Complete BABOK v3 coverage — all 6 knowledge areas, Bloom's Taxonomy, Business Analysis Planning, Strategy Analysis, and CBAP/CCBA certification prep.</p>
+          <div class="portal-meta">
+            <span class="portal-count">14 modules · Carousel</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="sysdesign.html" class="portal-card" style="--portal-accent:#6366F1" aria-label="System Design Guide">
+          <span class="portal-icon">🏗️</span>
+          <span class="portal-tag" style="color:#6366F1;border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.08)">SYSTEM DESIGN</span>
+          <h2 class="portal-title">System Design Guide</h2>
+          <p class="portal-desc">The BA/PO system design interview framework — 14-step process, architecture concepts, deliverables checklist, prioritization, acceptance criteria, and MVP templates.</p>
+          <div class="portal-meta">
+            <span class="portal-count">15 modules · Carousel</span>
+            <span class="portal-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="interviews.html" class="portal-card" style="--portal-accent:#EC4899" aria-label="Interview Q&A">
+          <span class="portal-icon">🎤</span>
+          <span class="portal-tag" style="color:#EC4899;border-color:rgba(236,72,153,0.3);background:rgba(236,72,153,0.08)">INTERVIEWS</span>
+          <h2 class="portal-title">Interview Q&amp;A</h2>
+          <p class="portal-desc">37 interview questions with model answers — core BA skills, SQL tools, STAR behavioral, Agile & Scrum, banking/fintech domain knowledge, and case studies.</p>
+          <div class="portal-meta">
+            <span class="portal-count">37 Q&As · 10 modules</span>
             <span class="portal-arrow">→</span>
           </div>
         </a>

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BA/PO Excellence Guide — 12 modules of elite BA/PO standards">
-  <title>BA/PO Excellence Guide · BA/PO Excellence</title>
+  <meta name="description" content="BA Interview Q&A — 37 interview questions across core skills, technical tools, behavioral, agile, banking, and case studies">
+  <title>Interview Q&A · BA/PO Excellence</title>
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
   <div class="page-bg"></div>
-  <div class="orb orb-1" style="background:radial-gradient(circle,rgba(6,182,212,0.25) 0%,transparent 70%)"></div>
-  <div class="orb orb-2" style="background:radial-gradient(circle,rgba(16,185,129,0.2) 0%,transparent 70%)"></div>
+  <div class="orb orb-1" style="background:radial-gradient(circle,rgba(236,72,153,0.25) 0%,transparent 70%)"></div>
+  <div class="orb orb-2" style="background:radial-gradient(circle,rgba(244,63,94,0.2) 0%,transparent 70%)"></div>
   <div class="particles"></div>
   <div id="resultFlash" class="result-flash"></div>
 
@@ -41,24 +41,24 @@
       <div class="page-eyebrow">
         <a href="index.html" class="back-link">← Back</a>
         <span>·</span>
-        <span>BA/PO Excellence Guide</span>
+        <span>Interview Q&amp;A</span>
       </div>
       <h1 class="page-h1">
-        Excellence <span class="accent" style="background:linear-gradient(135deg,#06B6D4,#10B981);-webkit-background-clip:text;background-clip:text;">Guide</span>
+        Interview <span class="accent" style="background:linear-gradient(135deg,#EC4899,#F43F5E);-webkit-background-clip:text;background-clip:text;">Q&amp;A</span>
       </h1>
       <p class="page-subtitle">
-        Elite BA/PO standards — requirements, stakeholders, backlog, UAT, metrics, and the exemplary mindset. From Core Challenge to Immediate Action Items.
+        37 interview questions — core BA skills, technical tools, STAR behavioral answers, Agile &amp; Scrum, banking/fintech domain, and case studies.
       </p>
     </header>
 
     <!-- Intro Banner -->
-    <div class="intro-banner" id="introBanner" style="--grad-primary:linear-gradient(135deg,#06B6D4,#10B981)"></div>
+    <div class="intro-banner" id="introBanner" style="--grad-primary:linear-gradient(135deg,#EC4899,#F43F5E)"></div>
 
     <!-- Carousel Section -->
-    <section class="carousel-section" aria-label="Excellence guide carousel">
+    <section class="carousel-section" aria-label="Interview Q&A carousel">
       <div class="carousel-header">
-        <h2 class="carousel-title">⚡ Modules</h2>
-        <span class="carousel-counter" id="carouselCounter" aria-live="polite">01 / 12</span>
+        <h2 class="carousel-title">🎯 Modules</h2>
+        <span class="carousel-counter" id="carouselCounter" aria-live="polite">01 / 10</span>
       </div>
 
       <div class="carousel-track-wrapper" id="carouselWrapper" role="region" aria-label="Module content">
@@ -67,7 +67,7 @@
 
       <nav class="carousel-nav" aria-label="Carousel navigation">
         <button id="prevBtn" class="nav-arrow" aria-label="Previous module" disabled>←</button>
-        <span class="nav-progress" id="navProgress" aria-live="polite">1 of 12</span>
+        <span class="nav-progress" id="navProgress" aria-live="polite">1 of 10</span>
         <button id="nextBtn" class="nav-arrow" aria-label="Next module">→</button>
       </nav>
 
@@ -78,6 +78,7 @@
   </main>
 
   <script src="js/data.js"></script>
+  <script src="js/data-interviews.js"></script>
   <script src="js/engine.js"></script>
   <script src="js/sounds.js"></script>
   <script src="js/app.js"></script>
@@ -87,14 +88,14 @@
 
       // Populate intro banner
       const banner = document.getElementById('introBanner');
-      if (banner && window.BAData) {
-        banner.innerHTML = `<strong>The Core Challenge:</strong> ${BAData.EXCELLENCE_INTRO.replace(/\n/g,'<br>')}`;
+      if (banner && window.INTERVIEW_DATA) {
+        banner.innerHTML = `<strong>About this guide:</strong> ${INTERVIEW_DATA.INTERVIEW_INTRO.replace(/\n/g,'<br>')}`;
       }
 
       // Build carousel with hourly shuffle
       const sections = window.Engine
-        ? Engine.getHourlyCardOrder(BAData.EXCELLENCE_SECTIONS)
-        : BAData.EXCELLENCE_SECTIONS;
+        ? Engine.getHourlyCardOrder(INTERVIEW_DATA.INTERVIEW_SECTIONS)
+        : INTERVIEW_DATA.INTERVIEW_SECTIONS;
 
       App.createCarousel(sections, App.renderContentCard);
 
