@@ -196,11 +196,27 @@ function createCarousel(sections, renderCard, opts = {}) {
   // Touch/swipe support
   let touchStartX = 0;
   let touchStartY = 0;
+  let touchInScrollable = false;
+
+  function isInsideScrollable(el) {
+    while (el && el !== wrapper) {
+      const style = window.getComputedStyle(el);
+      const overflowX = style.overflowX;
+      if ((overflowX === 'auto' || overflowX === 'scroll') && el.scrollWidth > el.clientWidth) {
+        return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
   wrapper.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
+    touchInScrollable = isInsideScrollable(e.target);
   }, { passive: true });
   wrapper.addEventListener('touchend', (e) => {
+    if (touchInScrollable) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
@@ -261,6 +277,15 @@ function initSoundOnInteraction() {
   document.addEventListener('touchstart', firstInteraction, { passive: true });
 }
 
+// ── HOVER SOUNDS ON NAV LINKS ──────────────────────────────────────
+function initHoverSounds() {
+  document.querySelectorAll('.nav-link, .portal-card, .btn').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      if (window.SoundEngine) SoundEngine.buttonHover();
+    });
+  });
+}
+
 // ── SOUND TOGGLE BUTTON ──────────────────────────────────────────
 function initSoundToggle() {
   const btn = document.getElementById('soundToggle');
@@ -269,15 +294,7 @@ function initSoundToggle() {
     const enabled = SoundEngine.toggle();
     btn.textContent = enabled ? '🔊' : '🔇';
     btn.title = enabled ? 'Mute sounds' : 'Enable sounds';
-  });
-}
-
-// ── HOVER SOUNDS ON NAV LINKS ────────────────────────────────────
-function initHoverSounds() {
-  document.querySelectorAll('.nav-link, .portal-card, .btn').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      if (window.SoundEngine) SoundEngine.buttonHover();
-    });
+    if (window.SoundEngine) SoundEngine.click();
   });
 }
 
@@ -311,12 +328,40 @@ function initScrollAnimations() {
   });
 }
 
+// ── MOBILE MENU TOGGLE ───────────────────────────────────────────
+function initMobileMenu() {
+  const btn = document.getElementById('mobileMenuBtn');
+  const nav = document.getElementById('navbarNav');
+  if (!btn || !nav) return;
+
+  btn.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // Close menu when a link is clicked
+  nav.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!btn.contains(e.target) && !nav.contains(e.target)) {
+      nav.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
 // ── MAIN INIT (called by each page) ─────────────────────────────
 function initApp() {
-  ThemeManager.init();
   initSoundOnInteraction();
   initSoundToggle();
   initParticles();
+  initMobileMenu();
   setActiveNavLink();
   initScrollAnimations();
 

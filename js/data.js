@@ -1521,6 +1521,102 @@ const QUIZ_QUESTIONS = [
     q: "What makes user research 'minimum viable' before building?",
     opts: ["A/B test results","5 user interviews before building","1 stakeholder approval","Analytics data alone"],
     a: 1, cat: "Quality"
+  },
+
+  // ── BABOK questions ────────────────────────────────────────────
+  {
+    q: "According to BABOK v3, which knowledge area focuses on identifying and defining the need before a solution is designed?",
+    opts: ["Business Analysis Planning & Monitoring","Strategy Analysis","Requirements Life Cycle Management","Solution Evaluation"],
+    a: 1, cat: "BABOK"
+  },
+  {
+    q: "In BABOK v3, what are the three categories of requirements?",
+    opts: ["Business, Stakeholder, Solution","Functional, Non-Functional, Technical","Current, Future, Transition","User, System, Quality"],
+    a: 0, cat: "BABOK"
+  },
+  {
+    q: "Which BABOK knowledge area covers maintaining requirements after approval through deployment?",
+    opts: ["Strategy Analysis","Elicitation & Collaboration","Requirements Life Cycle Management","Business Analysis Planning & Monitoring"],
+    a: 2, cat: "BABOK"
+  },
+  {
+    q: "Bloom's Taxonomy — which level represents the highest order of thinking (top of pyramid)?",
+    opts: ["Evaluate","Analyze","Create","Apply"],
+    a: 2, cat: "BABOK"
+  },
+  {
+    q: "What is the BABOK term for evaluating a proposed solution to check it actually delivers the intended business value?",
+    opts: ["Requirements Validation","Solution Evaluation","Quality Assurance","Acceptance Testing"],
+    a: 1, cat: "BABOK"
+  },
+
+  // ── System Design questions ────────────────────────────────────
+  {
+    q: "In the BA/PO System Design framework, what should be the FIRST step before proposing any architecture?",
+    opts: ["Choose the database","Clarify the problem, scope, and users","Draw the component diagram","Estimate storage capacity"],
+    a: 1, cat: "System Design"
+  },
+  {
+    q: "What is the main difference between vertical scaling and horizontal scaling?",
+    opts: ["Vertical = more servers; Horizontal = bigger server","Vertical = bigger single machine; Horizontal = more machines","Vertical is for databases only; Horizontal is for APIs","There is no meaningful difference"],
+    a: 1, cat: "System Design"
+  },
+  {
+    q: "In system design, what is the primary purpose of a CDN (Content Delivery Network)?",
+    opts: ["Store user passwords securely","Cache static assets geographically close to users for faster delivery","Manage microservice orchestration","Handle database replication"],
+    a: 1, cat: "System Design"
+  },
+  {
+    q: "When writing acceptance criteria, which format is most commonly used in Agile BA/PO work?",
+    opts: ["Given-When-Then (Gherkin)","If-Then-Else (pseudocode)","Pass/Fail checklists only","UML activity diagrams"],
+    a: 0, cat: "System Design"
+  },
+  {
+    q: "What does the CAP Theorem state for distributed systems?",
+    opts: ["Systems can guarantee Correctness, Availability, and Performance simultaneously","Systems can only guarantee two of: Consistency, Availability, Partition tolerance","Systems must choose between Cost, Accuracy, and Processing speed","Caching, APIs, and Persistence are the three pillars of system design"],
+    a: 1, cat: "System Design"
+  },
+
+  // ── Interview / BA Skills questions ───────────────────────────
+  {
+    q: "What does INVEST stand for in the context of user stories?",
+    opts: ["Independent, Negotiable, Valuable, Estimable, Small, Testable","Integrated, Novel, Verified, Executable, Structured, Testable","Iterative, Necessary, Validated, Estimated, Sized, Trackable","Independent, Necessary, Viable, Elastic, Simple, Testable"],
+    a: 0, cat: "Agile"
+  },
+  {
+    q: "In the STAR method for behavioral interviews, what percentage of your answer should be focused on the Action you took?",
+    opts: ["20%","40%","60%","80%"],
+    a: 2, cat: "Interview"
+  },
+  {
+    q: "What is the correct MoSCoW prioritization acronym?",
+    opts: ["Must, Should, Could, Would have","Must, Sometimes, Can, Won't have","Must, Should, Could, Won't have (this time)","Main, Secondary, Conditional, Wishlist"],
+    a: 2, cat: "Requirements"
+  },
+  {
+    q: "Which document defines WHAT the business needs at a high level and is targeted at business stakeholders?",
+    opts: ["FRD (Functional Requirements Document)","SRS (Software Requirements Specification)","BRD (Business Requirements Document)","User Stories"],
+    a: 2, cat: "Documents"
+  },
+  {
+    q: "In banking, what does KYC stand for?",
+    opts: ["Keep Your Customers","Know Your Customer","Key Year Compliance","Knowledge Your Credentials"],
+    a: 1, cat: "Banking"
+  },
+  {
+    q: "Gap Analysis compares which two states?",
+    opts: ["Planned vs. Actual performance","Current (As-Is) vs. Desired (To-Be) state","Business requirements vs. Technical specs","Functional vs. Non-functional requirements"],
+    a: 1, cat: "Analysis"
+  },
+  {
+    q: "What is the key difference between a Use Case and a User Story?",
+    opts: ["Use Cases are shorter; User Stories are longer","Use Cases are for Agile; User Stories are for Waterfall","Use Cases are formal, detailed (Waterfall); User Stories are simple, value-focused (Agile)","There is no meaningful difference"],
+    a: 2, cat: "Requirements"
+  },
+  {
+    q: "Which fintech trend refers to banking services embedded inside non-banking apps?",
+    opts: ["Open Banking","Embedded Finance","Hyper-Personalization","RegTech"],
+    a: 1, cat: "Fintech"
   }
 ];
 
@@ -1796,6 +1892,129 @@ The 90-Day Plan maps this: Month 1 = Foundation, Month 2 = Rigor, Month 3 = Infl
 7. Many conflicts are caused by different definitions. Define terms. Especially: customer, user, done, MVP, launch, approved, automated, real-time, exception, active, completed.
 
 8. A BA/PO without backbone becomes a note-taker. You need diplomacy and courage.`
+  },
+
+  // ── BABOK QOTD ────────────────────────────────────────────────
+  {
+    q: "Explain the difference between BABOK's 'Validate Requirements' and 'Verify Requirements' tasks. Why does this distinction matter?",
+    a: `Verify Requirements checks that requirements are well-formed — complete, consistent, clear, testable, and correct. It answers: "Did we write the requirements correctly?"
+
+Validate Requirements checks that requirements actually align to stakeholder and business needs. It answers: "Are we building the right thing?"
+
+Practical distinction:
+- A requirement can PASS verification (it is well-written) but FAIL validation (it solves the wrong problem)
+- Verification is often an internal BA quality check
+- Validation requires stakeholder sign-off and business context
+
+Why it matters:
+Many teams skip validation because they focus only on whether the document "looks right." Validated requirements survive change requests better because they are anchored to a justified business need, not just a preference. Teams that only verify — not validate — often build technically correct solutions that miss the business objective.`
+  },
+  {
+    q: "Walk through how BABOK's Strategy Analysis knowledge area would approach a situation where a bank wants to launch a mobile lending product.",
+    a: `Strategy Analysis starts with: Are we solving the right problem?
+
+Step 1 — Analyze Current State: Map the existing lending process, identify pain points, document current customer journey from enquiry to disbursement, gather data on current conversion rates and drop-off points.
+
+Step 2 — Define Future State: What does the mobile lending experience look like at maturity? What customer outcomes are targeted? What business metrics (approval rate, time-to-disburse, NPS) define success?
+
+Step 3 — Assess Risks: Regulatory (MAS/BNM guidelines for digital lending), credit risk (automated scoring accuracy), technology risk (fraud, security), business risk (cannibalizing branch products).
+
+Step 4 — Define Change Strategy: Prioritize capabilities for Phase 1 vs. Phase 2. Define what "minimum viable" means for regulatory compliance vs. customer experience.
+
+Step 5 — Business Case: Quantify the value — cost reduction per loan, new customer segments reached, improvement in NPS.
+
+The key output is not a features list — it is a justified strategic direction that aligns the solution to a validated business need.`
+  },
+
+  // ── System Design QOTD ────────────────────────────────────────
+  {
+    q: "A startup wants to build a ride-sharing app like Grab. Walk through the first 5 steps of the BA/PO System Design framework for this scenario.",
+    a: `Step 1 — Clarify the problem and scope:
+- Who are the users? (Riders, drivers, ops team, payments)
+- What is the core problem? (Reliable, fast matching of available drivers to riders)
+- What is in scope for MVP? (Booking, matching, payment, notifications)
+- What is explicitly out of scope? (Delivery, food, financial services)
+- Scale: How many concurrent users at peak?
+
+Step 2 — Identify users, personas, and journeys:
+- Rider: Browse → Book → Track → Pay → Rate
+- Driver: Accept job → Navigate → Complete → Track earnings
+- Operations: Monitor, flag issues, manage disputes
+
+Step 3 — Define functional requirements:
+- Real-time location tracking (GPS)
+- Driver matching algorithm (nearest available)
+- Fare calculation engine
+- In-app payment processing
+- Push notifications (job assigned, driver arriving, trip completed)
+
+Step 4 — Define non-functional requirements:
+- Latency: Matching response < 5 seconds
+- Availability: 99.9% uptime (SLA)
+- Scale: 100K concurrent users at peak
+- Security: PCI DSS for payment data
+
+Step 5 — Identify core entities and data model:
+- Users, Drivers, Trips, Locations, Payments, Ratings`
+  },
+  {
+    q: "What is the BA/PO questioning framework for system design interviews, and why is each question important?",
+    a: `The BA/PO Questioning Framework for System Design:
+
+1. "Can you clarify what problem we are actually solving?" — Prevents building the right architecture for the wrong problem.
+
+2. "Who are the users and how many are we designing for?" — Changes architecture decisions entirely (100 users vs. 10M users).
+
+3. "What are the most critical user journeys?" — Focuses design on what actually matters.
+
+4. "What are the performance expectations?" — Latency, throughput, and availability requirements determine database, caching, and scaling choices.
+
+5. "What are the security and compliance requirements?" — Drives encryption, access controls, audit logging requirements.
+
+6. "What are the integration points?" — Identifies external dependencies and failure modes.
+
+7. "What is the deployment and scaling model?" — Cloud vs. on-prem, auto-scaling vs. fixed capacity.
+
+8. "What does the MVP look like vs. the full vision?" — Prevents over-engineering Phase 1.
+
+Why this matters: System design interviews test your ability to navigate ambiguity. Jumping to solutions without asking these questions shows poor BA/PO instincts. Interviewers want to see structured thinking, not just technical knowledge.`
+  },
+
+  // ── Interview Prep QOTD ───────────────────────────────────────
+  {
+    q: "How would you respond if a stakeholder said 'Just build what I asked for'? Walk through your thought process and what you'd actually say.",
+    a: `This is the classic order-taker trap. Your value as a BA is in problem-solving, not transcription.
+
+Thought process: The stakeholder has a solution, but I don't yet understand the problem behind it. I need to decompose the request into: (1) What are they asking for? (2) What pain triggered the request? (3) What outcome would make this successful? (4) Are there constraints or alternatives?
+
+What I'd actually say:
+"I absolutely want to help you get what you need. Before I write up requirements, can I ask a few quick questions to make sure we build exactly the right thing? Specifically:
+- What problem will this solve for you or your team?
+- What does success look like — how will we know it's working?
+- Are there any constraints I should know about?
+
+I ask because sometimes there's a faster or cheaper way to solve the same problem, and I want to make sure we use your budget wisely."
+
+This approach: respects the stakeholder's authority, adds value without being dismissive, uncovers the real need, and protects the team from building the wrong thing. Never just say "no" — redirect toward the outcome.`
+  },
+  {
+    q: "Using the STAR method, walk through how you'd answer: 'Tell me about a time you managed conflicting stakeholder requirements.'",
+    a: `Structure: Situation (20%) → Task (10%) → Action (60%) → Result (10%)
+
+Situation: "In my previous role at a financial services company, I was managing requirements for a new customer portal. The Sales director wanted a simplified interface focused on quick conversions, while the Compliance team demanded extensive disclosures and multiple confirmation screens."
+
+Task: "My task was to reconcile these competing priorities within our 6-month timeline and $150,000 budget, while maintaining relationships with both departments."
+
+Action (most important — 60%):
+1. Facilitated a joint workshop where both teams presented requirements with business justification
+2. Mapped each requirement against business value and regulatory necessity
+3. Proposed a phased approach: Phase 1 includes all compliance-mandatory elements with streamlined UX; Phase 2 adds enhanced sales features
+4. Created prototypes showing how compliance needs could be met through progressive disclosure design
+5. Documented the rationale and obtained sign-off from both teams
+
+Result: "We launched Phase 1 on time, meeting all compliance requirements while achieving a 25% improvement in conversion rate vs. the old portal."
+
+Key principles in this answer: specific context, YOUR actions (not "we" vaguely), quantified results, and a clear resolution.`
   }
 ];
 
@@ -1827,7 +2046,28 @@ const QUOTES = [
   { text: "Stay available. Do not disappear after writing stories.", source: "Communication by Delivery Phase — Build" },
   { text: "If the goal changed, revisit priority. If only preference changed, protect delivery stability.", source: "Handling Difficult Scenarios" },
   { text: "Many conflicts are caused by different definitions. Define terms before building.", source: "Brutal Realities" },
-  { text: "Ensure business readiness, not just technical deployment.", source: "Communication by Delivery Phase — Release" }
+  { text: "Ensure business readiness, not just technical deployment.", source: "Communication by Delivery Phase — Release" },
+
+  // ── BABOK Quotes ──────────────────────────────────────────────
+  { text: "Business Analysis is not about producing documents. It is about enabling better decisions.", source: "BABOK v3 — Foundation" },
+  { text: "Requirements that cannot be tested are not requirements — they are wishes.", source: "BABOK v3 — Requirements Analysis" },
+  { text: "The most dangerous requirement is the one everyone assumes is understood.", source: "BABOK v3 — Elicitation & Collaboration" },
+  { text: "Strategy Analysis asks: Are we solving the right problem? Solution Evaluation asks: Did we solve it?", source: "BABOK v3 — Strategy Analysis" },
+  { text: "Validation confirms you built the right thing. Verification confirms you built it right.", source: "BABOK v3 — Study Guide" },
+
+  // ── System Design Quotes ──────────────────────────────────────
+  { text: "Always clarify scope before architecture. The best design for the wrong scope is still wrong.", source: "BA/PO System Design Guide — Core Principle" },
+  { text: "Non-functional requirements are not optional extras. They are failure modes waiting to be discovered.", source: "BA/PO System Design Guide — Step 4" },
+  { text: "CAP Theorem: A distributed system can guarantee at most two of Consistency, Availability, and Partition Tolerance.", source: "BA/PO System Design Guide — Architecture Concepts" },
+  { text: "Scope creep in system design is quiet. Each 'small addition' looks harmless in isolation.", source: "BA/PO System Design Guide — Prioritization" },
+  { text: "The MVP is not the minimum you can build. It is the minimum that delivers the core value proposition.", source: "BA/PO System Design Guide — MVP Templates" },
+
+  // ── Interview Quotes ──────────────────────────────────────────
+  { text: "Your value as a BA is in problem-solving, not transcription.", source: "BA Interview Q&A — Core Skills" },
+  { text: "SQL is the single most demanded technical skill for Business Analysts in 2025.", source: "BA Interview Q&A — Technical Tools" },
+  { text: "INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable — the checklist for every user story.", source: "BA Interview Q&A — Q10" },
+  { text: "In STAR answers, 60% of your response should describe the specific actions YOU took.", source: "BA Interview Q&A — Behavioral" },
+  { text: "Conflicting metrics between departments are usually a data governance problem, not a technical one.", source: "BA Interview Q&A — Case Study Q37" }
 ];
 
 // Export for use in other modules

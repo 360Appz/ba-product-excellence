@@ -1,0 +1,33 @@
+﻿// data-erp.js -- MASTER: ERP Domain Knowledge Study Guide (add5.txt)
+// Sections populated by data-erp-1.js ... data-erp-6.js
+window.ERP_SECTIONS = [];
+const ERP_INTRO = 'Comprehensive ERP Domain Knowledge Study Guide for Business Analysts. Covers ERP fundamentals, market landscape, all core modules, critical success factors, current trends, BA role, implementation methodologies, career paths, certifications, and a 30/60/90-day learning plan.';
+const ERP_QUIZ = [
+  { q: 'What does ERP stand for and what is its core value proposition?', opts: ['Enterprise Resource Planning -- integrates business processes via a centralised database eliminating data silos','Enterprise Requirements Planning -- defines system requirements for business','Electronic Resource Processing -- automates document workflows','Extended Resource Platform -- cloud infrastructure for enterprises'], a: 0, cat: 'ERP' },
+  { q: 'What is Fit-Gap Analysis in ERP?', opts: ['Analysing server performance gaps','Comparing ERP functionality to business requirements and categorising gaps requiring configuration or customisation','Measuring data quality gaps before migration','Reviewing UI design gaps against wireframes'], a: 1, cat: 'ERP' },
+  { q: 'What is the difference between Configuration and Customisation in ERP?', opts: ['Configuration modifies code; customisation uses settings','Configuration uses built-in settings and is safe for upgrades; customisation modifies code and creates upgrade risk','They are the same -- different vendors use different terms','Configuration is for cloud ERP; customisation is for on-premise'], a: 1, cat: 'ERP' },
+  { q: 'What does the SAP Activate methodology include?', opts: ['Plan, Analyse, Design, Build, Test, Deploy','Discover, Prepare, Explore, Realize, Deploy, Run','Initiate, Implement, Prepare, Operate','Focus, Plan, Develop, Transition, Operate'], a: 1, cat: 'ERP' },
+  { q: 'What is Master Data in ERP?', opts: ['Data from the master production schedule','Long-lived reference data such as customer master, vendor master, material master, and chart of accounts','Transaction data from purchase orders and invoices','Historical data used only for reporting'], a: 1, cat: 'ERP' },
+  { q: 'What percentage of project effort should typically be budgeted for data migration?', opts: ['5-10%','10-20%','30-40%','50-60%'], a: 2, cat: 'ERP' },
+  { q: 'What is Segregation of Duties (SoD) in ERP?', opts: ['Dividing the implementation project into phases','Internal control ensuring no single person has conflicting access rights to prevent fraud','Separating read and write database operations','Dividing ERP modules across different teams'], a: 1, cat: 'ERP' },
+  { q: 'Which ERP deployment model gives the vendor full control of upgrades in a multi-tenant environment?', opts: ['On-Premise','Private Cloud','Public Cloud / SaaS','Two-Tier ERP'], a: 2, cat: 'ERP' }
+];
+const ERP_QOTD = [
+  { q: 'A business unit insists that the new ERP must exactly replicate their legacy workflow. How do you respond as a BA?', a: 'This is the "paving the cow path" anti-pattern. Steps to handle it:\n1. Acknowledge their concern -- the team knows their process well and change is risky.\n2. Ask why: What business outcome does the current process deliver? What would be lost if it changed?\n3. Show the ERP standard process side-by-side with their current one. What is different? Why is the ERP way designed this way?\n4. Quantify the cost: customisation means upgrade lock-in, exponential maintenance, vendor support issues, and project timeline/budget risk.\n5. Explore the middle ground: Can configuration (not customisation) bridge most of the gap? Can a workaround deliver 80% of the outcome?\n6. Escalate to the steering committee if the business unit cannot accept standard -- this is a governance decision, not a BA decision alone.\n7. Document the decision and its rationale regardless of outcome.\n\nKey principle: Every customisation you approve is a long-term obligation. Approve sparingly, document thoroughly.' },
+  { q: 'Describe the data migration process in an ERP implementation and the key risks a BA must manage.', a: 'ERP Data Migration Process (ETL):\n\nEXTRACT: Identify source systems (legacy ERP, spreadsheets, databases). Extract data with SQL queries or export utilities. Profile data to understand what is actually there.\n\nTRANSFORM: Cleanse data (remove duplicates, fix formatting). Apply business rules (map old codes to new codes). Enrich missing required fields.\n\nLOAD: Use ERP data import tools (SAP LSMW, Oracle FBDI, Dynamics DMF). Run iterative mock migrations (#1, #2, #3). Reconcile counts and balances.\n\nKey risks:\n1. Duplicates: same customer with 5 different IDs in legacy -- solution: de-duplication and survivorship rules.\n2. Missing data: required ERP fields not in legacy -- solution: default values or data enrichment.\n3. Format differences: legacy uses "USA", ERP requires "US" -- solution: transformation lookup tables.\n4. Historical data volume: 20 years of transactions -- solution: archive old data; migrate only 3-5 years.\n5. Cutoff timing: transactions during migration weekend -- solution: freeze period and delta migration.\n\nRule: Allocate 20-30% of project budget to data quality. Garbage in, garbage out is the number one reason for ERP dissatisfaction.' }
+];
+const ERP_QUOTES = [
+  { text: 'Business analysts are the critical bridge between business stakeholders and technical teams in ERP projects.', source: 'ERP Domain Knowledge Study Guide' },
+  { text: 'Configure before customise. The mantra of successful ERP projects. Always question why custom code is needed.', source: 'Part 12: Final Thoughts' },
+  { text: 'People, Process, Technology -- in that order. Technology is the easy part.', source: 'Part 12: Final Thoughts' },
+  { text: 'Data quality is job one. Garbage in, garbage out. Prioritise data cleansing from day one.', source: 'Part 12: Final Thoughts' },
+  { text: 'User Adoption beats Features. A system with 70% of features but 90% adoption beats 100% features with 50% adoption.', source: 'Part 12: Final Thoughts' },
+  { text: 'The T-shaped BA succeeds in ERP: broad knowledge across modules plus deep expertise in one or two areas.', source: 'Part 7.2: Required Skills' }
+];
+window.ERP_DATA = {
+  ERP_INTRO,
+  get ERP_SECTIONS() { return window.ERP_SECTIONS; },
+  ERP_QUIZ,
+  ERP_QOTD,
+  ERP_QUOTES
+};

@@ -227,18 +227,24 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <a href="index.html" class="navbar-logo">BA/PO ⚡ EXCELLENCE</a>
-    <div class="navbar-nav">
+    <a href="index.html" class="navbar-logo">BA/PO ⚡<span class="logo-xl"> EXCELLENCE</span></a>
+    <div class="navbar-nav" id="navbarNav">
       <a href="index.html"      class="nav-link">Home</a>
       <a href="playbook.html"   class="nav-link">Playbook</a>
       <a href="excellence.html" class="nav-link">Excellence</a>
       <a href="quiz.html"       class="nav-link">Quiz</a>
       <a href="daily.html"      class="nav-link">Daily Hub</a>
+      <a href="babok.html"      class="nav-link">BABOK</a>
+      <a href="sysdesign.html"  class="nav-link">Sys Design</a>
+      <a href="interviews.html" class="nav-link">Interviews</a>
+      <a href="backend.html"    class="nav-link">Backend</a>
+      <a href="erp.html"        class="nav-link">ERP</a>
     </div>
     <div class="navbar-actions">
       <button id="soundToggle" class="theme-btn" title="Toggle sound" aria-label="Toggle sound">🔊</button>
-      <button id="themeToggle" class="theme-btn" title="Toggle theme" aria-label="Toggle dark mode">🌙</button>
-      <span id="xpBadge" class="xp-badge">⚡ 0 XP</span>
+      <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
 
@@ -289,7 +295,7 @@
       <div class="daily-card qotd-card" style="--card-gradient:linear-gradient(135deg,#F59E0B,#F43F5E);--card-color:#F59E0B">
         <div class="daily-card-eyebrow">🎯 QUESTION OF THE DAY</div>
         <p class="qotd-question" id="qotdQuestion">Loading...</p>
-        <button class="qotd-answer-btn" id="qotdRevealBtn" onclick="DailyHub.revealQotd()">
+        <button class="qotd-answer-btn" id="qotdRevealBtn" onclick="DailyHub.revealQotd()" aria-label="Reveal answer in modal">
           💡 Reveal Answer
         </button>
         <div class="qotd-answer" id="qotdAnswer"></div>
@@ -344,6 +350,27 @@
         </a>
       </div>
 
+    </div>
+
+    <!-- ANSWER MODAL -->
+    <div id="answerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-backdrop" onclick="DailyHub.closeModal()"></div>
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2 id="modalTitle" class="modal-title">Answer</h2>
+          <button 
+            class="modal-close-btn" 
+            onclick="DailyHub.closeModal()" 
+            aria-label="Close modal" 
+            title="Close (Esc)"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Answer content inserted here -->
+        </div>
+      </div>
     </div>
 
   </main>
@@ -408,21 +435,43 @@
       const q = window.Engine ? Engine.getQuestionOfDay() : (window.BAData ? BAData.QOTD_POOL[0] : null);
       if (!q) return;
       const qEl = document.getElementById('qotdQuestion');
-      const aEl = document.getElementById('qotdAnswer');
       if (qEl) qEl.textContent = q.q;
-      if (aEl) aEl.textContent = q.a;
+      // Store answer for later modal display
+      DailyHub._currentAnswer = q.a;
     }
 
     function revealQotd() {
-      const aEl = document.getElementById('qotdAnswer');
-      const btn = document.getElementById('qotdRevealBtn');
-      if (aEl) {
-        aEl.classList.add('revealed');
-        if (btn) btn.style.display = 'none';
-        if (window.SoundEngine) SoundEngine.reveal();
-        if (window.Engine) { Engine.addXP(15); App.updateXPBadge(); }
-        App.showToast('+15 XP for reviewing the answer! 🧠');
-      }
+      const modal = document.getElementById('answerModal');
+      const modalBody = document.getElementById('modalBody');
+      const modalTitle = document.getElementById('modalTitle');
+      
+      if (!modal || !modalBody) return;
+      
+      // Set modal content
+      const qEl = document.getElementById('qotdQuestion');
+      const questionText = qEl ? qEl.textContent : 'Answer';
+      modalTitle.textContent = 'Answer';
+      modalBody.textContent = DailyHub._currentAnswer || 'No answer available';
+      
+      // Show modal
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Focus management for accessibility
+      modal.focus();
+      
+      // Award XP
+      if (window.SoundEngine) SoundEngine.reveal();
+      if (window.Engine) { Engine.addXP(15); App.updateXPBadge(); }
+      App.showToast('+15 XP for reviewing the answer! 🧠');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('answerModal');
+      if (!modal) return;
+      
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
     }
 
     // ── STREAK & XP ──────────────────────────────
@@ -554,6 +603,33 @@
         App.updateXPBadge();
         App.showToast('🌅 +10 XP for your daily visit!');
       }
+
+      // Setup modal event listeners
+      setupModalEvents();
+    }
+
+    function setupModalEvents() {
+      const modal = document.getElementById('answerModal');
+      if (!modal) return;
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      // Close on backdrop click
+      const backdrop = modal.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.addEventListener('click', closeModal);
+      }
+
+      // Prevent closing when clicking inside modal
+      const container = modal.querySelector('.modal-container');
+      if (container) {
+        container.addEventListener('click', (e) => e.stopPropagation());
+      }
     }
 
     return {
@@ -562,8 +638,10 @@
       prevQuote,
       copyQuote,
       revealQotd,
+      closeModal,
       nextRF,
-      prevRF
+      prevRF,
+      _currentAnswer: ''
     };
   })();
 
